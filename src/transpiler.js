@@ -8,8 +8,20 @@ const wordAt = /[\p{L}_$][\p{L}\p{N}_$]*/uy;
  * möglichst stabil bleiben.
  */
 export function transpile(source, translations, text = undefined) {
+  return transpileDetailed(source, translations, text).code;
+}
+
+export function transpileDetailed(source, translations, text = undefined) {
   let result = '';
+  const generatedToSource = [];
   let index = 0;
+  const emit = (value, sourceStart, sourceEnd = sourceStart + 1) => {
+    const sourceLength = Math.max(1, sourceEnd - sourceStart);
+    for (let offset = 0; offset < value.length; offset += 1) {
+      generatedToSource.push(sourceStart + Math.min(offset, sourceLength - 1));
+    }
+    result += value;
+  };
 
   while (index < source.length) {
     const character = source[index];
@@ -18,7 +30,7 @@ export function transpile(source, translations, text = undefined) {
     if (character === '/' && next === '/') {
       const end = source.indexOf('\n', index);
       const stop = end === -1 ? source.length : end;
-      result += source.slice(index, stop);
+      emit(source.slice(index, stop), index, stop);
       index = stop;
       continue;
     }
@@ -26,14 +38,14 @@ export function transpile(source, translations, text = undefined) {
     if (character === '/' && next === '*') {
       const end = source.indexOf('*/', index + 2);
       const stop = end === -1 ? source.length : end + 2;
-      result += source.slice(index, stop);
+      emit(source.slice(index, stop), index, stop);
       index = stop;
       continue;
     }
 
     if (character === '"' || character === "'" || character === '`') {
       const end = findQuotedEnd(source, index, character);
-      result += source.slice(index, end);
+      emit(source.slice(index, end), index, end);
       index = end;
       continue;
     }
@@ -42,27 +54,30 @@ export function transpile(source, translations, text = undefined) {
     const match = wordAt.exec(source);
     if (match) {
       if (text && match[0] === text.anfang) {
+        const start = index;
         const translated = translateWordString(source, wordAt.lastIndex, translations, text);
-        result += `"${translated.value}"`;
+        emit(`"${translated.value}"`, start, translated.end);
         index = translated.end;
         continue;
       }
       if (text && match[0] === text.wortschutz) {
+        const start = index;
         const escaped = readProtectedWord(source, wordAt.lastIndex, translations, text);
-        result += escaped.value;
+        emit(escaped.value, start, escaped.end);
         index = escaped.end;
         continue;
       }
-      result += translations.get(match[0]) ?? match[0];
+      emit(translations.get(match[0]) ?? match[0], index, wordAt.lastIndex);
       index = wordAt.lastIndex;
       continue;
     }
 
-    result += character;
+    emit(character, index);
     index += 1;
   }
 
-  return result;
+  generatedToSource.push(source.length);
+  return { code: result, generatedToSource, source };
 }
 
 /** Übersetzt TypeScript-Tokens in die kanonischen SächScript-Wörter. */

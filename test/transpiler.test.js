@@ -111,3 +111,21 @@ test('meldet TypeScript-Syntaxfehler mit einer Position', () => {
     /Zeile 1, Spalte \d+/
   );
 });
+
+test('meldet semantische Typfehler', () => {
+  assert.throws(
+    () => emitJavaScript('const alter: number = "zwölf";'),
+    /Type 'string' is not assignable to type 'number'/
+  );
+});
+
+test('bildet Diagnosepositionen auf das ursprüngliche SächScript ab', async () => {
+  const { translations, text } = await loadTranslations(configPath);
+  const source = 'dauerdings alter doppelpunkt nummer issgleich hochkommauff zwölf hochkommazu semikolon';
+  const { transpileDetailed } = await import('../src/transpiler.js');
+  const translated = transpileDetailed(source, translations, text);
+  assert.throws(
+    () => emitJavaScript(translated.code, 'fehler.saechs', translated),
+    /Zeile 1, Spalte 12:/
+  );
+});

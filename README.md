@@ -28,6 +28,7 @@ node bin/saechscript.js examples/hallo.saechs --stdout
 node bin/saechscript.js mein-programm.saechs -o dist/mein-programm.ts
 node bin/saechscript.js nach-saechs mein-programm.ts -o dist/mein-programm.saechs
 node bin/saechscript.js bau examples/hallo.saechs -o dist/hallo.js
+node bin/saechscript.js pruefe examples/hallo.saechs
 ```
 
 Optional kann eine andere Regeldatei verwendet werden:
@@ -80,6 +81,7 @@ Reguläre Ausdrücke werden mithilfe des TypeScript-Parsers sicher vom
 Divisionsoperator unterschieden. Template-Strings bleiben derzeit als vollständige
 TypeScript-Einheit erhalten; ihre `${...}`-Ausdrücke werden noch nicht versächsischt.
 
-`saechscript bau` erzeugt direkt modernes JavaScript und meldet syntaktische
-TypeScript-Fehler mit Zeile und Spalte. Eine projektweite semantische Typprüfung
-und präzise Source Maps auf die ursprünglichen Wortspalten folgen noch.
+`saechscript bau` erzeugt direkt modernes JavaScript. `saechscript pruefe` führt
+dieselbe syntaktische und semantische TypeScript-Prüfung ohne Ausgabedatei aus.
+Fehler werden auf Zeile und Spalte im ursprünglichen SächScript zurückgeführt.
+Projektweite Prüfung mehrerer Dateien und Source-Map-Dateien folgen noch.

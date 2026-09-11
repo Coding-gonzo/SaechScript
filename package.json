@@ -1,6 +1,6 @@
 {
   "name": "saechscript",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Ein konfigurierbarer sächsischer TypeScript-Transpiler",
   "type": "module",
   "bin": {
