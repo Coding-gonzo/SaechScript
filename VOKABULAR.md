@@ -128,6 +128,10 @@ Abgleich mit TypeScript noch fehlenden Tokens. Die maschinenlesbare Quelle bleib
 | `??` | `wennnix` |
 | `**` | `hoch` |
 | `++` / `--` | `machmehrmehr` / `machwenigerweniger` |
+| `+=` / `-=` | `machmehrgleich` / `machwenigergleich` |
+| `*=` / `/=` / `%=` | `machmalgleich` / `machmaldurchgleich` / `restgleich` |
+| `**=` | `hochgleich` |
+| `&&=` / `||=` / `??=` | `undgleich` / `odergleich` / `wennnixgleich` |
 
 ### Strukturzeichen und Texte
 
@@ -153,13 +157,6 @@ Diese Tokens kommen in modernem TypeScript regelmäßig vor.
 | --- | --- |
 | `#` | `privatzeichen` |
 | `` ` `` | noch offen – Teil der Template-String-Syntax |
-
-### Zusammengesetzte Zuweisungen
-
-Es fehlen `+=`, `-=`, `*=`, `**=`, `/=`, `%=`, `&&=`, `||=` und `??=`.
-Naheliegend ist die Familie `machmehrgleich`, `machwenigergleich`,
-`machmalgleich`, `hochgleich`, `machmaldurchgleich`, `restgleich`, `undgleich`,
-`odergleich` und `wennnixgleich`.
 
 ## Fehlend: mittlere Priorität
 
@@ -191,6 +188,6 @@ Sie sollten als eine gemeinsame Wortfamilie festgelegt werden.
 
 ## Zählung
 
-- 103 normale Übersetzungsregeln
+- 112 normale Übersetzungsregeln
 - 3 Textsteuerwörter (`hochkommauff`, `hochkommazu`, `wOrt`)
-- 42 noch nicht zugeordnete TypeScript-Tokens
+- 33 noch nicht zugeordnete TypeScript-Tokens

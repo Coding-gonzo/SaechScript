@@ -111,6 +111,17 @@
       "machmehrmehr": "++",
       "machwenigerweniger": "--"
     },
+    "zusammengesetzte_zuweisungen": {
+      "machmehrgleich": "+=",
+      "machwenigergleich": "-=",
+      "machmalgleich": "*=",
+      "hochgleich": "**=",
+      "machmaldurchgleich": "/=",
+      "restgleich": "%=",
+      "undgleich": "&&=",
+      "odergleich": "||=",
+      "wennnixgleich": "??="
+    },
     "zeichen": {
       "ät": "@",
       "klammeruff": "(",

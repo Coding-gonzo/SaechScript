@@ -140,6 +140,18 @@ test('übersetzt moderne Operatoren bidirektional', async () => {
   assert.doesNotThrow(() => emitJavaScript(roundtrip));
 });
 
+test('übersetzt zusammengesetzte Zuweisungen bidirektional', async () => {
+  const { translations, reverseTranslations, text } = await loadTranslations(configPath);
+  const typescript = 'let a = 1; a += 2; a -= 3; a *= 4; a **= 2; a /= 5; a %= 6; let b = true; b &&= false; b ||= true; let c: number | null = null; c ??= 7;';
+  const saechs = transpileToSaechs(typescript, translations, reverseTranslations, text);
+  for (const word of ['machmehrgleich', 'machwenigergleich', 'machmalgleich', 'hochgleich', 'machmaldurchgleich', 'restgleich', 'undgleich', 'odergleich', 'wennnixgleich']) {
+    assert.match(saechs, new RegExp(word));
+  }
+  const roundtrip = transpile(saechs, translations, text);
+  assert.equal(roundtrip.replace(/\s+/g, ''), typescript.replace(/\s+/g, ''));
+  assert.doesNotThrow(() => emitJavaScript(roundtrip));
+});
+
 test('lässt Strings und Kommentare unberührt', async () => {
   const { translations } = await loadTranslations(configPath);
   const source = '// machema machmehr\ndauerdings text issgleich "machema machmehr" semikolon /* klammeruff */';

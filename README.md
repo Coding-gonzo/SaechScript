@@ -189,6 +189,10 @@ node bin/saechscript.js nach-ts programm.saechs --config eigene-regeln.json
 | `...` / `?.` | `undsoweiter` / `vielleichtpunkt` |
 | `??` / `**` | `wennnix` / `hoch` |
 | `++` / `--` | `machmehrmehr` / `machwenigerweniger` |
+| `+=` / `-=` | `machmehrgleich` / `machwenigergleich` |
+| `*=` / `/=` / `%=` | `machmalgleich` / `machmaldurchgleich` / `restgleich` |
+| `**=` | `hochgleich` |
+| `&&=` / `||=` / `??=` | `undgleich` / `odergleich` / `wennnixgleich` |
 | `=` | `issgleich` |
 | `===` / `==` | `isswirklichgleich` / `issungefährgleich` |
 | `!==` / `!=` | `isswirklichnichgleich` / `issnichgleich` |
