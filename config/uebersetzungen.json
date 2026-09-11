@@ -1,0 +1,72 @@
+{
+  "$schema": "../schemas/uebersetzungen.schema.json",
+  "sprache": "SächScript",
+  "version": 1,
+  "regeln": {
+    "schluesselwoerter": {
+      "machema": "function",
+      "lassma": "const",
+      "aenderma": "let",
+      "wennde": "if",
+      "sonst": "else",
+      "gibbe": "return",
+      "solange": "while",
+      "fuer": "for",
+      "von": "of",
+      "holRein": "import",
+      "gibRaus": "export",
+      "aus": "from",
+      "versuchma": "try",
+      "fangAb": "catch",
+      "schmeiss": "throw",
+      "wardema": "await",
+      "nebenbei": "async",
+      "neu": "new",
+      "truppe": "class"
+    },
+    "typen": {
+      "jane": "boolean",
+      "schrift": "string",
+      "zahl": "number",
+      "nueschtTyp": "void",
+      "irgendwas": "unknown"
+    },
+    "werte": {
+      "nuja": "true",
+      "nee": "false",
+      "nuescht": "null",
+      "weessnisch": "undefined"
+    },
+    "operatoren": {
+      "plus": "+",
+      "minus": "-",
+      "mal": "*",
+      "durch": "/",
+      "rest": "%",
+      "ist": "=",
+      "gleich": "===",
+      "ungleich": "!==",
+      "kleener": "<",
+      "groesser": ">",
+      "kleenerGleich": "<=",
+      "groesserGleich": ">=",
+      "und": "&&",
+      "oder": "||",
+      "nicht": "!",
+      "pfeil": "=>"
+    },
+    "zeichen": {
+      "rundeAuf": "(",
+      "rundeZu": ")",
+      "eckigeAuf": "[",
+      "eckigeZu": "]",
+      "geschweifteAuf": "{",
+      "geschweifteZu": "}",
+      "komma": ",",
+      "punkt": ".",
+      "doppelpunkt": ":",
+      "semikolon": ";",
+      "fragezeichen": "?"
+    }
+  }
+}

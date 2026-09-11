@@ -1,0 +1,18 @@
+{
+  "name": "saechscript",
+  "version": "0.1.0",
+  "description": "Ein konfigurierbarer sächsischer TypeScript-Transpiler",
+  "type": "module",
+  "bin": {
+    "saechscript": "./bin/saechscript.js"
+  },
+  "scripts": {
+    "build": "node scripts/build.js",
+    "test": "node test/transpiler.test.js",
+    "example": "node bin/saechscript.js examples/hallo.saechs --stdout"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "license": "MIT"
+}

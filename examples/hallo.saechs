@@ -1,0 +1,13 @@
+// Sämtliche Struktursymbole können als Wörter geschrieben werden.
+machema addiere rundeAuf a doppelpunkt zahl komma b doppelpunkt zahl rundeZu doppelpunkt zahl geschweifteAuf
+  gibbe a plus b semikolon
+geschweifteZu
+
+lassma allesGut doppelpunkt jane ist nuja semikolon
+lassma ergebnis ist addiere rundeAuf 2 komma 3 rundeZu semikolon
+
+wennde rundeAuf allesGut und ergebnis gleich 5 rundeZu geschweifteAuf
+  console punkt log rundeAuf "Nu, das läuft – plus bleibt hier Text." rundeZu semikolon
+geschweifteZu sonst geschweifteAuf
+  console punkt log rundeAuf "Nu gugge ma." rundeZu semikolon
+geschweifteZu
