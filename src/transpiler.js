@@ -45,6 +45,12 @@ export function transpile(source, translations, text = undefined) {
         index = translated.end;
         continue;
       }
+      if (text && match[0] === text.wortschutz) {
+        const escaped = readProtectedWord(source, wordAt.lastIndex, translations, text);
+        result += escaped.value;
+        index = escaped.end;
+        continue;
+      }
       result += translations.get(match[0]) ?? match[0];
       index = wordAt.lastIndex;
       continue;
@@ -55,6 +61,101 @@ export function transpile(source, translations, text = undefined) {
   }
 
   return result;
+}
+
+/** Übersetzt TypeScript-Tokens in die kanonischen SächScript-Wörter. */
+export function transpileToSaechs(source, translations, reverseTranslations, text) {
+  const symbolTargets = [...reverseTranslations.keys()]
+    .filter((target) => !/^[\p{L}_$][\p{L}\p{N}_$]*$/u.test(target))
+    .sort((left, right) => right.length - left.length);
+  let result = '';
+  let index = 0;
+
+  while (index < source.length) {
+    const character = source[index];
+    const next = source[index + 1];
+
+    if (character === '/' && next === '/') {
+      const end = source.indexOf('\n', index);
+      const stop = end === -1 ? source.length : end;
+      result += source.slice(index, stop);
+      index = stop;
+      continue;
+    }
+    if (character === '/' && next === '*') {
+      const end = source.indexOf('*/', index + 2);
+      const stop = end === -1 ? source.length : end + 2;
+      result += source.slice(index, stop);
+      index = stop;
+      continue;
+    }
+    if (character === '"') {
+      const end = findQuotedEnd(source, index, character);
+      if (end === source.length && source[end - 1] !== '"') {
+        throw new Error('Nicht abgeschlossener TypeScript-Text.');
+      }
+      const content = source.slice(index + 1, end - 1);
+      result += `${text.anfang} ${protectStringWords(content, translations, text)} ${text.ende}`;
+      index = end;
+      continue;
+    }
+    if (character === "'" || character === '`') {
+      const end = findQuotedEnd(source, index, character);
+      result += source.slice(index, end);
+      index = end;
+      continue;
+    }
+
+    wordAt.lastIndex = index;
+    const match = wordAt.exec(source);
+    if (match) {
+      const translated = reverseTranslations.get(match[0]);
+      if (translated) result += translated;
+      else if (translations.has(match[0]) || [text.anfang, text.ende, text.wortschutz].includes(match[0])) {
+        result += `${text.wortschutz} ${match[0]}`;
+      } else result += match[0];
+      index = wordAt.lastIndex;
+      continue;
+    }
+
+    const symbol = symbolTargets.find((target) => source.startsWith(target, index));
+    if (symbol) {
+      result = appendSpaced(result, reverseTranslations.get(symbol));
+      index += symbol.length;
+      while (source[index] === ' ') index += 1;
+      continue;
+    }
+
+    result += character;
+    index += 1;
+  }
+
+  return result;
+}
+
+function readProtectedWord(source, start, translations, text) {
+  let protectedStart = start;
+  if (source[protectedStart] === ' ') protectedStart += 1;
+  wordAt.lastIndex = protectedStart;
+  const protectedWord = wordAt.exec(source);
+  if (!protectedWord) throw new Error(`Nach ${text.wortschutz} muss ein Wort stehen.`);
+  const isVocabulary = translations.has(protectedWord[0]) ||
+    [text.anfang, text.ende, text.wortschutz].includes(protectedWord[0]);
+  if (!isVocabulary) throw new Error(`"${protectedWord[0]}" braucht keinen Wortschutz.`);
+  return { value: protectedWord[0], end: wordAt.lastIndex };
+}
+
+function protectStringWords(content, translations, text) {
+  return content.replace(/[\p{L}_$][\p{L}\p{N}_$]*/gu, (word) => {
+    const needsProtection = translations.has(word) ||
+      [text.anfang, text.ende, text.wortschutz].includes(word);
+    return needsProtection ? `${text.wortschutz} ${word}` : word;
+  });
+}
+
+function appendSpaced(result, word) {
+  const prefix = result.length > 0 && !/\s$/.test(result) ? ' ' : '';
+  return `${result}${prefix}${word} `;
 }
 
 function translateWordString(source, start, translations, text) {
@@ -77,20 +178,9 @@ function translateWordString(source, start, translations, text) {
     }
 
     if (match[0] === text.wortschutz) {
-      let protectedStart = wordAt.lastIndex;
-      if (source[protectedStart] === ' ') protectedStart += 1;
-      wordAt.lastIndex = protectedStart;
-      const protectedWord = wordAt.exec(source);
-      if (!protectedWord) {
-        throw new Error(`Nach ${text.wortschutz} muss innerhalb eines Textes ein Wort stehen.`);
-      }
-      const isVocabulary = translations.has(protectedWord[0]) ||
-        [text.anfang, text.ende, text.wortschutz].includes(protectedWord[0]);
-      if (!isVocabulary) {
-        throw new Error(`"${protectedWord[0]}" braucht keinen Wortschutz.`);
-      }
-      value += protectedWord[0];
-      index = wordAt.lastIndex;
+      const escaped = readProtectedWord(source, wordAt.lastIndex, translations, text);
+      value += escaped.value;
+      index = escaped.end;
       continue;
     }
 

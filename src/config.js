@@ -43,5 +43,13 @@ export async function loadTranslations(path) {
     }
   }
 
-  return { document, translations, text };
+  const reverseTranslations = new Map();
+  for (const [source, target] of translations) {
+    if (reverseTranslations.has(target)) {
+      throw new Error(`Das TypeScript-Token "${target}" hat mehr als eine Rückübersetzung.`);
+    }
+    reverseTranslations.set(target, source);
+  }
+
+  return { document, translations, reverseTranslations, text };
 }

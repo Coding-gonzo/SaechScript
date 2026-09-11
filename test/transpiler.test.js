@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { resolve } from 'node:path';
 import { loadTranslations } from '../src/config.js';
-import { transpile } from '../src/transpiler.js';
+import { transpile, transpileToSaechs } from '../src/transpiler.js';
 
 const configPath = resolve('config/uebersetzungen.json');
 
@@ -51,5 +51,25 @@ test('verlangt wOrt vor jedem Vokabularwort im Text', async () => {
   assert.throws(
     () => transpile('hochkommauff Das macht machmehr Spaß. hochkommazu', translations, text),
     /muss im Text mit wOrt geschützt werden/
+  );
+});
+
+test('übersetzt TypeScript mit längsten Operatoren zurück', async () => {
+  const { translations, reverseTranslations, text } = await loadTranslations(configPath);
+  const source = 'const zahl: number = 2 + 3;\nif (zahl === 5) {}';
+  const saechs = transpileToSaechs(source, translations, reverseTranslations, text);
+  assert.match(saechs, /dauerdings zahl doppelpunkt nummer issgleich 2 machmehr 3 semikolon/);
+  assert.match(saechs, /wennde klammeruff zahl isswirklichgleich 5 klammerzu/);
+});
+
+test('Roundtrip schützt kollidierende Bezeichner und Wörter im Text', async () => {
+  const { translations, reverseTranslations, text } = await loadTranslations(configPath);
+  const typescript = 'const nummer = "hochkommazu und machmehr";';
+  const saechs = transpileToSaechs(typescript, translations, reverseTranslations, text);
+  assert.match(saechs, /dauerdings wOrt nummer/);
+  assert.match(saechs, /wOrt hochkommazu wOrt und wOrt machmehr/);
+  assert.equal(
+    transpile(saechs, translations, text).replace(/\s+/g, ''),
+    typescript.replace(/\s+/g, '')
   );
 });

@@ -1,7 +1,7 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { dirname } from 'node:path';
 import { loadTranslations } from './config.js';
-import { transpile } from './transpiler.js';
+import { transpile, transpileToSaechs } from './transpiler.js';
 
 export async function compileFile(inputPath, outputPath, configPath) {
   const [{ translations, text }, source] = await Promise.all([
@@ -9,6 +9,19 @@ export async function compileFile(inputPath, outputPath, configPath) {
     readFile(inputPath, 'utf8')
   ]);
   const output = transpile(source, translations, text);
+  if (outputPath) {
+    await mkdir(dirname(outputPath), { recursive: true });
+    await writeFile(outputPath, output, 'utf8');
+  }
+  return output;
+}
+
+export async function translateTypeScriptFile(inputPath, outputPath, configPath) {
+  const [{ translations, reverseTranslations, text }, source] = await Promise.all([
+    loadTranslations(configPath),
+    readFile(inputPath, 'utf8')
+  ]);
+  const output = transpileToSaechs(source, translations, reverseTranslations, text);
   if (outputPath) {
     await mkdir(dirname(outputPath), { recursive: true });
     await writeFile(outputPath, output, 'utf8');

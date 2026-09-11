@@ -26,6 +26,7 @@ npm test
 npm run build
 node bin/saechscript.js examples/hallo.saechs --stdout
 node bin/saechscript.js mein-programm.saechs -o dist/mein-programm.ts
+node bin/saechscript.js nach-saechs mein-programm.ts -o dist/mein-programm.saechs
 ```
 
 Optional kann eine andere Regeldatei verwendet werden:
@@ -63,9 +64,16 @@ hochkommauff Das Wort wOrt hochkommazu bleibt Teil des Textes. hochkommazu
 
 Das ergibt den TypeScript-Text `"Das Wort hochkommazu bleibt Teil des Textes."`.
 
+`wOrt` schützt außerdem Bezeichner, die zufällig wie ein Vokabularwort heißen.
+So wird eine TypeScript-Variable namens `nummer` als `wOrt nummer` ausgegeben und
+beim Roundtrip nicht mit dem Typ `number` verwechselt.
+
 ## Aktuelle Grenze
 
 Template-Strings werden in Version 0.1 vollständig als String behandelt. Deshalb
 werden sächsische Wörter innerhalb von `${...}` noch nicht übersetzt. Eine
 vollständige TypeScript-Syntaxprüfung und Source Maps sind als nächste Etappe in
 [`PLAN.md`](./PLAN.md) vorgesehen.
+
+Die Rückübersetzung behandelt reguläre Ausdrücke derzeit noch nicht vollständig;
+ein `/` kann dabei wie der Divisionsoperator gelesen werden.
