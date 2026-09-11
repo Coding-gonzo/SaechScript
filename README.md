@@ -165,6 +165,8 @@ node bin/saechscript.js nach-ts programm.saechs --config eigene-regeln.json
 | `try` / `catch` / `finally` | `versuchma` / `fangab` / `amende` |
 | `throw` | `schmeiss` |
 | `do` / `while` | `machma` / `solange` |
+| `namespace` / `module` | `namensdings` / `baustein` |
+| `global` | `überall` |
 | `class` / `interface` | `sonding` / `bauplan` |
 | `extends` / `implements` | `erbtvon` / `machtswie` |
 | `constructor` / `new` | `bauarbeiter` / `neu` |

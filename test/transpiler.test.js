@@ -164,6 +164,24 @@ test('übersetzt Aufzählungen, Objektoperationen und Generatoren bidirektional'
   assert.doesNotThrow(() => emitJavaScript(roundtrip));
 });
 
+test('übersetzt Namensräume und Module bidirektional', async () => {
+  const { translations, reverseTranslations, text } = await loadTranslations(configPath);
+  const sources = [
+    'namespace Werkstatt { export const werkzeug = 1; } export {}; declare global { interface Window { werkzeug?: number; } }',
+    'declare module "bauteile" { export const schraube: number; }'
+  ];
+  const saechsSources = sources.map((source) => transpileToSaechs(source, translations, reverseTranslations, text));
+  const combined = saechsSources.join(' ');
+  for (const word of ['namensdings', 'baustein', 'überall']) {
+    assert.match(combined, new RegExp(word));
+  }
+  for (const [index, saechs] of saechsSources.entries()) {
+    const roundtrip = transpile(saechs, translations, text);
+    assert.equal(roundtrip.replace(/\s+/g, ''), sources[index].replace(/\s+/g, ''));
+    assert.doesNotThrow(() => emitJavaScript(roundtrip));
+  }
+});
+
 test('lässt Strings und Kommentare unberührt', async () => {
   const { translations } = await loadTranslations(configPath);
   const source = '// machema machmehr\ndauerdings text issgleich "machema machmehr" semikolon /* klammeruff */';

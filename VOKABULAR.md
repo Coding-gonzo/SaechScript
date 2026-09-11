@@ -68,6 +68,14 @@ Abgleich mit TypeScript noch fehlenden Tokens. Die maschinenlesbare Quelle bleib
 | `export` | `gibraus` |
 | `from` | `aus` |
 
+### Namensräume
+
+| TypeScript | SächScript |
+| --- | --- |
+| `namespace` | `namensdings` |
+| `module` | `baustein` |
+| `global` | `überall` |
+
 ### Klassen und Objekte
 
 | TypeScript | SächScript |
@@ -171,7 +179,6 @@ Diese Tokens kommen in modernem TypeScript regelmäßig vor.
 
 | Bereich | TypeScript-Tokens |
 | --- | --- |
-| Namespaces | `module`, `namespace`, `global` |
 | Ressourcen | `using`, `defer` |
 | Accessors | `accessor` |
 | Import-Kompatibilität | `require`, `assert` |
@@ -194,6 +201,6 @@ Sie sollten als eine gemeinsame Wortfamilie festgelegt werden.
 
 ## Zählung
 
-- 116 normale Übersetzungsregeln
+- 119 normale Übersetzungsregeln
 - 3 Textsteuerwörter (`hochkommauff`, `hochkommazu`, `wOrt`)
-- 29 noch nicht zugeordnete TypeScript-Tokens
+- 26 noch nicht zugeordnete TypeScript-Tokens
