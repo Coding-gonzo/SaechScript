@@ -1,0 +1,8 @@
+{
+  "$schema": "./schemas/saechscript.schema.json",
+  "eingabe": "examples",
+  "ausgabe": "dist",
+  "ziel": "ES2022",
+  "streng": true,
+  "sourceMaps": false
+}

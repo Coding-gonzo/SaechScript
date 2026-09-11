@@ -4,6 +4,7 @@ import { resolve } from 'node:path';
 import { loadTranslations } from '../src/config.js';
 import { transpile, transpileToSaechs } from '../src/transpiler.js';
 import { emitJavaScript } from '../src/compiler.js';
+import { compileProject } from '../src/project.js';
 
 const configPath = resolve('config/uebersetzungen.json');
 
@@ -128,4 +129,17 @@ test('bildet Diagnosepositionen auf das ursprüngliche SächScript ab', async ()
     () => emitJavaScript(translated.code, 'fehler.saechs', translated),
     /Zeile 1, Spalte 12:/
   );
+});
+
+test('prüft mehrere SächScript-Dateien und löst ihre Imports auf', async () => {
+  const fixture = resolve('test/fixtures/project');
+  const result = await compileProject({
+    inputRoot: fixture,
+    outputRoot: resolve('dist/test-project'),
+    target: 'ES2022',
+    strict: true,
+    sourceMaps: false
+  }, configPath, { emit: false });
+  assert.equal(result.files, 2);
+  assert.equal(result.outputs, 0);
 });

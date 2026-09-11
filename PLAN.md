@@ -14,9 +14,9 @@ Satzzeichen werden über `config/uebersetzungen.json` definiert.
    Vokabular, `wOrt`-Schutz und Roundtrip-Tests.
 3. **Parser (teilweise erledigt):** reguläre Ausdrücke korrekt erkennen und
    Template-Strings sicher erhalten. Ihre Ausdrücke werden noch nicht übersetzt.
-4. **TypeScript-Anbindung (teilweise erledigt):** JavaScript erzeugen, Syntax und
-   Typen prüfen und Fehlerpositionen auf `.saechs` zurückführen. Als Nächstes
-   folgen projektweite Prüfung mehrerer Dateien und Source-Map-Dateien.
+4. **TypeScript-Anbindung (weitgehend erledigt):** JavaScript erzeugen, Syntax-
+   und Typfehler zurückführen, mehrere Dateien gemeinsam prüfen und relative
+   Imports auflösen. Als Nächstes folgen echte Source Maps.
 5. **Werkzeuge:** VS-Code-Syntaxhervorhebung, Formatter, Sprachserver und
    automatische Dokumentation der verfügbaren Wörter.
 6. **Sprache stabilisieren:** Dialektbeirat, reservierte Wörter, Versionierung der

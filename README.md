@@ -53,7 +53,37 @@ saechscript --help
 Ohne Verlinkung werden die folgenden Beispiele mit
 `node bin/saechscript.js` ausgeführt.
 
-## CLI
+## Projektmodus
+
+Eine `saechscript.json` definiert Ein- und Ausgabeordner sowie Compileroptionen:
+
+```json
+{
+  "$schema": "./schemas/saechscript.schema.json",
+  "eingabe": "src",
+  "ausgabe": "dist",
+  "ziel": "ES2022",
+  "streng": true,
+  "sourceMaps": false
+}
+```
+
+Danach werden alle `.saechs`-Dateien unter `eingabe` gemeinsam verarbeitet:
+
+```powershell
+node bin/saechscript.js pruefe
+node bin/saechscript.js bau
+```
+
+Relative Imports zwischen SächScript-Dateien werden aufgelöst und gemeinsam
+typgeprüft. Unterordner und Dateinamen bleiben im Ausgabeordner erhalten. Eine
+abweichende Projektdatei wird mit `-p` angegeben:
+
+```powershell
+node bin/saechscript.js bau -p config/mein-projekt.json
+```
+
+## CLI und Einzeldateien
 
 ### SächScript nach TypeScript
 
@@ -88,8 +118,9 @@ node bin/saechscript.js bau programm.saechs -o dist/programm.js
 node bin/saechscript.js pruefe programm.saechs
 ```
 
-`pruefe` erzeugt keine Ausgabedatei. Es meldet Syntax- und Typfehler mit Zeile
-und Spalte im ursprünglichen SächScript-Quelltext.
+Mit einer angegebenen Datei arbeitet `pruefe` im Einzeldateimodus und erzeugt
+keine Ausgabe. Ohne Datei verwendet es `saechscript.json`. Syntax- und Typfehler
+enthalten den ursprünglichen Dateipfad sowie Zeile und Spalte.
 
 Eine eigene Regeldatei lässt sich mitgeben:
 
@@ -168,15 +199,15 @@ npm run example
 ```
 
 Der aktuelle Testumfang deckt Vorwärtsübersetzung, Rückübersetzung, Roundtrips,
-Textschutz, Regex-Literale, Template-Strings, JavaScript-Ausgabe sowie Syntax- und
-Typdiagnosen ab.
+Textschutz, Regex-Literale, Template-Strings, JavaScript-Ausgabe, Typdiagnosen,
+Mehrdateiprojekte und Importauflösung ab.
 
 ## Aktuelle Grenzen
 
 - Template-Strings bleiben als sichere TypeScript-Einheit erhalten; Ausdrücke in
   `${...}` werden noch nicht versächsischt.
-- `bau` und `pruefe` verarbeiten derzeit jeweils eine einzelne Quelldatei.
-- Projektweite Imports und echte Source-Map-Dateien folgen in einer späteren
-  Version.
+- TypeScript-Abhängigkeiten aus `node_modules` und komplexe `paths`-Aliase sind
+  noch nicht als eigenes SächScript-Konfigurationsmodell abgebildet.
+- Echte Source-Map-Dateien zurück auf `.saechs` folgen in einer späteren Version.
 
 Die geplanten Etappen stehen in [`PLAN.md`](./PLAN.md).
