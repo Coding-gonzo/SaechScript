@@ -4,5 +4,5 @@
   "ausgabe": "dist",
   "ziel": "ES2022",
   "streng": true,
-  "sourceMaps": false
+  "sourceMaps": true
 }

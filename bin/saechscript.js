@@ -8,7 +8,7 @@ const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const args = process.argv.slice(2);
 
 if (args.includes('--help') || args.includes('-h') || args.length === 0) {
-  console.log(`SächScript 0.4.0
+  console.log(`SächScript 0.5.0
 
 Aufruf:
   saechscript nach-ts <datei.saechs> [-o ausgabe.ts]

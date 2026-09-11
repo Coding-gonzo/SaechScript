@@ -1,6 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { resolve } from 'node:path';
+import { readFile } from 'node:fs/promises';
+import { TraceMap, originalPositionFor } from '@jridgewell/trace-mapping';
 import { loadTranslations } from '../src/config.js';
 import { transpile, transpileToSaechs } from '../src/transpiler.js';
 import { emitJavaScript } from '../src/compiler.js';
@@ -142,4 +144,28 @@ test('prüft mehrere SächScript-Dateien und löst ihre Imports auf', async () =
   }, configPath, { emit: false });
   assert.equal(result.files, 2);
   assert.equal(result.outputs, 0);
+});
+
+test('erzeugt Source Maps zurück auf die ursprüngliche SächScript-Datei', async () => {
+  const fixture = resolve('test/fixtures/project');
+  const outputRoot = resolve('test-output/source-map');
+  const result = await compileProject({
+    inputRoot: fixture,
+    outputRoot,
+    target: 'ES2022',
+    strict: true,
+    sourceMaps: true
+  }, configPath);
+  assert.equal(result.outputs, 4);
+
+  const javascript = await readFile(resolve(outputRoot, 'mathe.js'), 'utf8');
+  const map = new TraceMap(await readFile(resolve(outputRoot, 'mathe.js.map'), 'utf8'));
+  const returnOffset = javascript.indexOf('return');
+  const beforeReturn = javascript.slice(0, returnOffset).split('\n');
+  const original = originalPositionFor(map, {
+    line: beforeReturn.length,
+    column: beforeReturn.at(-1).length
+  });
+  assert.match(original.source, /mathe\.saechs$/);
+  assert.equal(original.line, 2);
 });

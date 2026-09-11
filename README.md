@@ -64,7 +64,7 @@ Eine `saechscript.json` definiert Ein- und Ausgabeordner sowie Compileroptionen:
   "ausgabe": "dist",
   "ziel": "ES2022",
   "streng": true,
-  "sourceMaps": false
+  "sourceMaps": true
 }
 ```
 
@@ -208,6 +208,8 @@ Mehrdateiprojekte und Importauflösung ab.
   `${...}` werden noch nicht versächsischt.
 - TypeScript-Abhängigkeiten aus `node_modules` und komplexe `paths`-Aliase sind
   noch nicht als eigenes SächScript-Konfigurationsmodell abgebildet.
-- Echte Source-Map-Dateien zurück auf `.saechs` folgen in einer späteren Version.
+- Source Maps enthalten den ursprünglichen SächScript-Quelltext und verweisen
+  direkt auf `.saechs`; sehr komplexe Token-Umschreibungen können derzeit noch
+  auf den Beginn eines Quellwortes zeigen.
 
 Die geplanten Etappen stehen in [`PLAN.md`](./PLAN.md).

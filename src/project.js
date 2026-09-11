@@ -1,6 +1,8 @@
 import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { dirname, extname, join, relative, resolve } from 'node:path';
 import ts from 'typescript';
+import { GenMapping, addSegment, setSourceContent, toEncodedMap } from '@jridgewell/gen-mapping';
+import { TraceMap, decodedMappings } from '@jridgewell/trace-mapping';
 import { loadTranslations } from './config.js';
 import { transpileDetailed } from './transpiler.js';
 
@@ -27,9 +29,6 @@ export async function loadProject(projectPath = 'saechscript.json') {
 }
 
 export async function compileProject(project, configPath, { emit = true } = {}) {
-  if (project.sourceMaps) {
-    throw new Error('Source Maps für .saechs sind noch nicht verfügbar; setze "sourceMaps" auf false.');
-  }
   const files = await findFiles(project.inputRoot, '.saechs');
   if (files.length === 0) throw new Error(`Keine .saechs-Dateien unter ${project.inputRoot} gefunden.`);
   const { translations, text } = await loadTranslations(configPath);
@@ -65,7 +64,8 @@ function compileEntries(entries, project, emit) {
     noEmit: !emit,
     noEmitOnError: true,
     skipLibCheck: true,
-    sourceMap: false
+    sourceMap: project.sourceMaps,
+    inlineSources: project.sourceMaps
   };
   const host = ts.createCompilerHost(options);
   const originalGetSourceFile = host.getSourceFile.bind(host);
@@ -80,7 +80,7 @@ function compileEntries(entries, project, emit) {
     return originalGetSourceFile(file, languageVersion, onError, shouldCreateNewSourceFile);
   };
 
-  const outputs = [];
+  let outputs = [];
   host.writeFile = (path, content) => outputs.push({ path, content });
   const program = ts.createProgram([...entries.values()].map((entry) => entry.virtualFile), options, host);
   const diagnostics = ts.getPreEmitDiagnostics(program);
@@ -91,8 +91,50 @@ function compileEntries(entries, project, emit) {
     const result = program.emit();
     const emitErrors = result.diagnostics.filter((diagnostic) => diagnostic.category === ts.DiagnosticCategory.Error);
     if (emitErrors.length > 0) throw new Error(formatProjectDiagnostics(emitErrors, entries));
+    if (project.sourceMaps) outputs = composeSourceMaps(outputs, entries);
   }
   return { outputs, diagnostics };
+}
+
+function composeSourceMaps(outputs, entries) {
+  return outputs.map((output) => {
+    if (!output.path.endsWith('.js.map')) return output;
+    const rawMap = JSON.parse(output.content);
+    const decoded = decodedMappings(new TraceMap(rawMap));
+    const generatedMap = new GenMapping({ file: rawMap.file });
+    const sourceNames = new Map();
+
+    for (let generatedLine = 0; generatedLine < decoded.length; generatedLine += 1) {
+      for (const segment of decoded[generatedLine]) {
+        if (segment.length < 4) continue;
+        const [, sourceIndex, originalLine, originalColumn] = segment;
+        const intermediateSource = resolve(dirname(output.path), rawMap.sourceRoot ?? '', rawMap.sources[sourceIndex]);
+        const entry = entries.get(normalizePath(intermediateSource));
+        if (!entry) continue;
+        const lineStarts = getLineStarts(entry.code);
+        const generatedOffset = Math.min((lineStarts[originalLine] ?? entry.code.length) + originalColumn, entry.generatedToSource.length - 1);
+        const sourceOffset = entry.generatedToSource[generatedOffset];
+        const original = lineAndCharacter(entry.source, sourceOffset);
+        let sourceName = sourceNames.get(entry.sourceFile);
+        if (!sourceName) {
+          sourceName = relative(dirname(output.path), entry.sourceFile).replaceAll('\\', '/');
+          sourceNames.set(entry.sourceFile, sourceName);
+          setSourceContent(generatedMap, sourceName, entry.source);
+        }
+        addSegment(generatedMap, generatedLine, segment[0], sourceName, original.line, original.character);
+      }
+    }
+
+    return { ...output, content: JSON.stringify(toEncodedMap(generatedMap)) };
+  });
+}
+
+function getLineStarts(source) {
+  const starts = [0];
+  for (let index = 0; index < source.length; index += 1) {
+    if (source[index] === '\n') starts.push(index + 1);
+  }
+  return starts;
 }
 
 function formatProjectDiagnostics(diagnostics, entries) {
