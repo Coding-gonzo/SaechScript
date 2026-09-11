@@ -87,7 +87,7 @@ test('übersetzt Interfaces und abstrakte, statische sowie schreibgeschützte El
   assert.match(saechs, /bauplan Ding/);
   assert.match(saechs, /nurguggen wert doppelpunkt zeuch/);
   assert.match(saechs, /nuridee sonding Basis/);
-  assert.match(saechs, /fest nurguggen art doppelpunkt schlüsselvon Ding/);
+  assert.match(saechs, /fest nurguggen wOrt art doppelpunkt schlüsselvon Ding/);
   assert.equal(transpile(saechs, translations, text).replace(/\s+/g, ''), typescript.replace(/\s+/g, ''));
 });
 
@@ -115,6 +115,16 @@ test('übersetzt die vollständige Grundtypenfamilie bidirektional', async () =>
   assert.match(saechs, /niemals/);
   assert.match(saechs, /nix/);
   assert.match(saechs, /weessnisch/);
+  assert.equal(transpile(saechs, translations, text).replace(/\s+/g, ''), typescript.replace(/\s+/g, ''));
+});
+
+test('übersetzt Typdefinitionen und Typoperatoren bidirektional', async () => {
+  const { translations, reverseTranslations, text } = await loadTranslations(configPath);
+  const typescript = 'declare type Element<T> = T extends (infer U)[] ? U : never; const wert = eingabe as string satisfies string; function istText(wert: unknown): wert is string { return typeof wert === "string"; } function prüfe(wert: unknown): asserts wert is string {} type Kennung = unique symbol;';
+  const saechs = transpileToSaechs(typescript, translations, reverseTranslations, text);
+  for (const word of ['angekündigt', 'art', 'abgeleitet', 'als', 'erfüllt', 'ist', 'artvon', 'versichert', 'einzig']) {
+    assert.match(saechs, new RegExp(word));
+  }
   assert.equal(transpile(saechs, translations, text).replace(/\s+/g, ''), typescript.replace(/\s+/g, ''));
 });
 

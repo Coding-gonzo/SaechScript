@@ -66,6 +66,17 @@
       "egalwas": "any",
       "niemals": "never"
     },
+    "typoperatoren": {
+      "art": "type",
+      "als": "as",
+      "erfüllt": "satisfies",
+      "artvon": "typeof",
+      "abgeleitet": "infer",
+      "ist": "is",
+      "versichert": "asserts",
+      "angekündigt": "declare",
+      "einzig": "unique"
+    },
     "werte": {
       "nuja": "true",
       "nee": "false",

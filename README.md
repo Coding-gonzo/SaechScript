@@ -178,6 +178,11 @@ node bin/saechscript.js nach-ts programm.saechs --config eigene-regeln.json
 | `void` / `never` | `ohnewert` / `niemals` |
 | `unknown` / `any` | `irgendwas` / `egalwas` |
 | `null` / `undefined` | `nix` / `weessnisch` |
+| `type` / `as` | `art` / `als` |
+| `satisfies` / `typeof` | `erfüllt` / `artvon` |
+| `infer` / `is` | `abgeleitet` / `ist` |
+| `asserts` / `declare` | `versichert` / `angekündigt` |
+| `unique` | `einzig` |
 | `+` / `-` | `machmehr` / `machweniger` |
 | `*` / `/` | `machmal` / `machmaldurch` |
 | `=>` | `pfeil` |
@@ -190,6 +195,8 @@ node bin/saechscript.js nach-ts programm.saechs --config eigene-regeln.json
 
 Das vollständige Vokabular steht in
 [`config/uebersetzungen.json`](./config/uebersetzungen.json).
+Eine nach Themen gruppierte Übersicht einschließlich aller noch offenen
+TypeScript-Tokens enthält [`VOKABULAR.md`](./VOKABULAR.md).
 
 ### Klassenbeispiel
 
