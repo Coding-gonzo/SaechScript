@@ -103,6 +103,14 @@
       "nicht": "!",
       "pfeil": "=>"
     },
+    "moderne_operatoren": {
+      "undsoweiter": "...",
+      "vielleichtpunkt": "?.",
+      "wennnix": "??",
+      "hoch": "**",
+      "machmehrmehr": "++",
+      "machwenigerweniger": "--"
+    },
     "zeichen": {
       "ät": "@",
       "klammeruff": "(",

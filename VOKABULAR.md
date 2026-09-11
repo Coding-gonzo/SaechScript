@@ -123,6 +123,11 @@ Abgleich mit TypeScript noch fehlenden Tokens. Die maschinenlesbare Quelle bleib
 | `<` / `>` | `kleener` / `groesser` |
 | `<=` / `>=` | `kleenergleich` / `groessergleich` |
 | `&&` / `||` / `!` | `und` / `oder` / `nicht` |
+| `...` | `undsoweiter` |
+| `?.` | `vielleichtpunkt` |
+| `??` | `wennnix` |
+| `**` | `hoch` |
+| `++` / `--` | `machmehrmehr` / `machwenigerweniger` |
 
 ### Strukturzeichen und Texte
 
@@ -146,11 +151,6 @@ Diese Tokens kommen in modernem TypeScript regelmäßig vor.
 
 | TypeScript | Arbeitsvorschlag |
 | --- | --- |
-| `...` | `undsoweiter` |
-| `?.` | `vielleichtpunkt` |
-| `??` | `wennnix` |
-| `**` | `hoch` |
-| `++` / `--` | `machmehrmehr` / `machwenigerweniger` |
 | `#` | `privatzeichen` |
 | `` ` `` | noch offen – Teil der Template-String-Syntax |
 
@@ -191,6 +191,6 @@ Sie sollten als eine gemeinsame Wortfamilie festgelegt werden.
 
 ## Zählung
 
-- 97 normale Übersetzungsregeln
+- 103 normale Übersetzungsregeln
 - 3 Textsteuerwörter (`hochkommauff`, `hochkommazu`, `wOrt`)
-- 48 noch nicht zugeordnete TypeScript-Tokens
+- 42 noch nicht zugeordnete TypeScript-Tokens
