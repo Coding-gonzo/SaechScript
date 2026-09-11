@@ -1,13 +1,15 @@
 # SächScript
 
+Aktueller Stand: **Version 0.5.0**
+
 **TypeScript goes sächsisch.** SächScript übersetzt ausgeschriebene sächsische
 Quelltexte nach TypeScript und JavaScript – und vorhandenes TypeScript wieder
 zurück nach SächScript.
 
 ```saechs
-machema addiere klammeruff a doppelpunkt nummer komma b doppelpunkt nummer klammerzu doppelpunkt nummer geschweifteAuf
+machema addiere klammeruff a doppelpunkt nummer komma b doppelpunkt nummer klammerzu doppelpunkt nummer geschweifteauf
   gibbe a machmehr b semikolon
-geschweifteZu
+geschweiftezu
 
 dauerdings ergebnis issgleich addiere klammeruff 2 komma 3 klammerzu semikolon
 ```
@@ -31,6 +33,7 @@ const ergebnis = addiere(2, 3);
 - Fehlerpositionen auf den ursprünglichen SächScript-Quelltext zurückführen
 - Strings und kollidierende Bezeichner mit `wOrt` eindeutig schützen
 - reguläre Ausdrücke sicher vom Divisionsoperator unterscheiden
+- standardkonforme Source Maps zurück auf `.saechs` erzeugen
 - Vokabular über eine JSON-Datei erweitern
 
 ## Installation
@@ -82,6 +85,21 @@ abweichende Projektdatei wird mit `-p` angegeben:
 ```powershell
 node bin/saechscript.js bau -p config/mein-projekt.json
 ```
+
+### Source Maps verwenden
+
+Mit `"sourceMaps": true` erzeugt der Projektbuild neben jeder JavaScript-Datei
+eine `.js.map`. Die Map verweist direkt auf die ursprüngliche `.saechs`-Datei und
+enthält deren Quelltext, sodass Debugger keine erzeugte TypeScript-Datei benötigen.
+
+Node.js berücksichtigt die Maps beispielsweise mit:
+
+```powershell
+node --enable-source-maps dist/hallo.js
+```
+
+Bei einem Laufzeitfehler zeigt der Stacktrace dadurch auf `examples/hallo.saechs`.
+Mit `"sourceMaps": false` lässt sich die Ausgabe abschalten.
 
 ## CLI und Einzeldateien
 
@@ -135,14 +153,34 @@ node bin/saechscript.js nach-ts programm.saechs --config eigene-regeln.json
 | `function` | `machema` |
 | `var` | `dings` |
 | `const` | `dauerdings` |
-| `let` | `aenderma` |
+| `let` | `änderdings` |
 | `number` | `nummer` |
 | `boolean` | `jane` |
 | `true` / `false` | `nuja` / `nee` |
 | `return` | `gibbe` |
-| `if` / `else` | `wennde` / `sonst` |
+| `if` / `else` | `wenn` / `sonst` |
+| `switch` / `case` / `default` | `probiermal` / `wenndas` / `vonhausaus` |
+| `break` / `continue` | `fertsch` / `weiter` |
+| `try` / `catch` / `finally` | `versuchma` / `fangab` / `amende` |
+| `throw` | `schmeiss` |
+| `do` / `while` | `machma` / `solange` |
+| `class` / `interface` | `sonding` / `bauplan` |
+| `extends` / `implements` | `erbtvon` / `machtswie` |
+| `constructor` / `new` | `bauarbeiter` / `neu` |
+| `this` / `super` | `dasda` / `obersonding` |
+| `public` / `private` / `protected` | `füralle` / `fürmich` / `geschützt` |
+| `static` / `readonly` | `fest` / `nurguggen` |
+| `abstract` / `override` | `nuridee` / `überschreib` |
+| `get` / `set` | `holma` / `setzma` |
+| `instanceof` / `keyof` | `isseinsvon` / `schlüsselvon` |
+| `bigint` / `object` | `riesennummer` / `zeuch` |
+| `symbol` | `merkzeichen` |
+| `void` / `never` | `ohnewert` / `niemals` |
+| `unknown` / `any` | `irgendwas` / `egalwas` |
+| `null` / `undefined` | `nix` / `weessnisch` |
 | `+` / `-` | `machmehr` / `machweniger` |
 | `*` / `/` | `machmal` / `machmaldurch` |
+| `=>` | `pfeil` |
 | `=` | `issgleich` |
 | `===` / `==` | `isswirklichgleich` / `issungefährgleich` |
 | `!==` / `!=` | `isswirklichnichgleich` / `issnichgleich` |
@@ -152,6 +190,24 @@ node bin/saechscript.js nach-ts programm.saechs --config eigene-regeln.json
 
 Das vollständige Vokabular steht in
 [`config/uebersetzungen.json`](./config/uebersetzungen.json).
+
+### Klassenbeispiel
+
+```saechs
+gibraus sonding hund erbtvon tier machtswie haustier geschweifteauf
+  geschützt bauarbeiter klammeruff name doppelpunkt schrift klammerzu geschweifteauf
+    obersonding klammeruff name klammerzu semikolon
+  geschweiftezu
+
+  füralle überschreib laut klammeruff klammerzu doppelpunkt schrift geschweifteauf
+    gibbe dasda punkt name semikolon
+  geschweiftezu
+geschweiftezu
+```
+
+Eigene Bezeichner wie `hund`, `tier` oder `name` dürfen weiterhin frei gewählt
+und auch großgeschrieben werden. Die Kleinschreibungsregel gilt ausschließlich
+für reservierte SächScript-Vokabeln.
 
 ## Texte und `wOrt`
 
@@ -184,11 +240,13 @@ Neue Übersetzungen werden in `config/uebersetzungen.json` ergänzt, beispielswe
 
 ```json
 "machhoch": "**",
-"doppelFrage": "??"
+"doppelfrage": "??"
 ```
 
 Jedes TypeScript-Token darf nur eine kanonische SächScript-Rückübersetzung haben.
-Die Konfiguration wird beim Laden entsprechend validiert.
+Alle eigentlichen Vokabeln werden kleingeschrieben. Der Schutzmarker `wOrt` ist
+bewusst die einzige Ausnahme, damit er nicht mit dem normalen Wort „Wort“
+verwechselt wird. Die Konfiguration wird beim Laden auf diese Regeln geprüft.
 
 ## Entwicklung
 
@@ -200,7 +258,7 @@ npm run example
 
 Der aktuelle Testumfang deckt Vorwärtsübersetzung, Rückübersetzung, Roundtrips,
 Textschutz, Regex-Literale, Template-Strings, JavaScript-Ausgabe, Typdiagnosen,
-Mehrdateiprojekte und Importauflösung ab.
+Mehrdateiprojekte, Importauflösung und komponierte Source Maps ab.
 
 ## Aktuelle Grenzen
 

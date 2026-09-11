@@ -18,6 +18,11 @@ export async function loadTranslations(path) {
   if (!text || !identifier.test(text.anfang) || !identifier.test(text.ende) || !identifier.test(text.wortschutz)) {
     throw new Error('Die Textsyntax braucht gültige Wörter für "anfang", "ende" und "wortschutz".');
   }
+  for (const textWord of [text.anfang, text.ende]) {
+    if (textWord !== textWord.toLocaleLowerCase('de-DE')) {
+      throw new Error(`Das Textwort "${textWord}" muss kleingeschrieben sein.`);
+    }
+  }
 
   const translations = new Map();
   for (const [category, rules] of Object.entries(document.regeln)) {
@@ -27,6 +32,9 @@ export async function loadTranslations(path) {
     for (const [source, target] of Object.entries(rules)) {
       if (!identifier.test(source)) {
         throw new Error(`"${source}" ist kein gültiges sächsisches Quellwort.`);
+      }
+      if (source !== source.toLocaleLowerCase('de-DE')) {
+        throw new Error(`Das Quellwort "${source}" muss kleingeschrieben sein.`);
       }
       if (typeof target !== 'string' || target.length === 0) {
         throw new Error(`Das Ziel für "${source}" muss eine nichtleere Zeichenkette sein.`);

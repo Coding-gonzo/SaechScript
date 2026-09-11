@@ -1,13 +1,13 @@
 // Sämtliche Struktursymbole können als Wörter geschrieben werden.
-machema addiere klammeruff a doppelpunkt nummer komma b doppelpunkt nummer klammerzu doppelpunkt nummer geschweifteAuf
+machema addiere klammeruff a doppelpunkt nummer komma b doppelpunkt nummer klammerzu doppelpunkt nummer geschweifteauf
   gibbe a machmehr b semikolon
-geschweifteZu
+geschweiftezu
 
 dauerdings allesGut doppelpunkt jane issgleich nuja semikolon
 dauerdings ergebnis issgleich addiere klammeruff 2 komma 3 klammerzu semikolon
 
-wennde klammeruff allesGut und ergebnis isswirklichgleich 5 klammerzu geschweifteAuf
+wenn klammeruff allesGut und ergebnis isswirklichgleich 5 klammerzu geschweifteauf
   console punkt log klammeruff hochkommauff Nu, das läuft – wOrt machmehr wOrt und wOrt hochkommazu bleiben hier Text. hochkommazu klammerzu semikolon
-geschweifteZu sonst geschweifteAuf
+geschweiftezu sonst geschweifteauf
   console punkt log klammeruff hochkommauff Nu gugge ma. hochkommazu klammerzu semikolon
-geschweifteZu
+geschweiftezu

@@ -26,5 +26,5 @@ Satzzeichen werden über `config/uebersetzungen.json` definiert.
 
 Neue Übersetzungen werden ausschließlich als Quellwort/Zieltoken-Paar in einer
 Kategorie unter `regeln` ergänzt. Quellwörter müssen gültige Bezeichner sein.
-Dadurch kann etwa `hoch` zu `**`, `optional` zu `?.` oder `doppelFrage` zu `??`
+Dadurch kann etwa `hoch` zu `**`, `optional` zu `?.` oder `doppelfrage` zu `??`
 werden, ohne den Transpiler-Code anzufassen.

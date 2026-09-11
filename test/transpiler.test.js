@@ -12,11 +12,110 @@ const configPath = resolve('config/uebersetzungen.json');
 
 test('übersetzt Schlüsselwörter, Typen, Operatoren und Zeichen', async () => {
   const { translations, text } = await loadTranslations(configPath);
-  const source = 'machema summe klammeruff a doppelpunkt nummer komma b doppelpunkt nummer klammerzu geschweifteAuf gibbe a machmehr b semikolon geschweifteZu';
+  const source = 'machema summe klammeruff a doppelpunkt nummer komma b doppelpunkt nummer klammerzu geschweifteauf gibbe a machmehr b semikolon geschweiftezu';
   assert.equal(
     transpile(source, translations, text),
     'function summe ( a : number , b : number ) { return a + b ; }'
   );
+});
+
+test('übersetzt vonhausaus in beiden Richtungen kanonisch', async () => {
+  const { translations, reverseTranslations, text } = await loadTranslations(configPath);
+  assert.equal(transpile('gibraus vonhausaus Ding semikolon', translations, text), 'export default Ding ;');
+  assert.match(transpileToSaechs('export default Ding;', translations, reverseTranslations, text), /gibraus vonhausaus Ding semikolon/);
+});
+
+test('übersetzt die Variablenfamilie kanonisch', async () => {
+  const { translations, reverseTranslations, text } = await loadTranslations(configPath);
+  const saechs = 'dings alt issgleich 1 semikolon änderdings aktuell issgleich 2 semikolon dauerdings festwert issgleich 3 semikolon';
+  const typescript = 'var alt = 1 ; let aktuell = 2 ; const festwert = 3 ;';
+  assert.equal(transpile(saechs, translations, text), typescript);
+  assert.match(
+    transpileToSaechs(typescript, translations, reverseTranslations, text),
+    /dings alt issgleich 1 semikolon änderdings aktuell issgleich 2 semikolon dauerdings festwert issgleich 3 semikolon/
+  );
+});
+
+test('übersetzt die Fallauswahl mit probiermal und wenndas', async () => {
+  const { translations, reverseTranslations, text } = await loadTranslations(configPath);
+  const saechs = 'probiermal klammeruff farbe klammerzu geschweifteauf wenndas rot doppelpunkt vonhausaus doppelpunkt geschweiftezu';
+  const typescript = 'switch ( farbe ) { case rot : default : }';
+  assert.equal(transpile(saechs, translations, text), typescript);
+  assert.match(transpileToSaechs(typescript, translations, reverseTranslations, text), /probiermal klammeruff farbe klammerzu geschweifteauf wenndas rot doppelpunkt vonhausaus doppelpunkt geschweiftezu/);
+});
+
+test('übersetzt if, else und Schleifensteuerung als Paket', async () => {
+  const { translations, reverseTranslations, text } = await loadTranslations(configPath);
+  const saechs = 'wenn klammeruff bereit klammerzu geschweifteauf weiter semikolon geschweiftezu sonst geschweifteauf fertsch semikolon geschweiftezu';
+  const typescript = 'if ( bereit ) { continue ; } else { break ; }';
+  assert.equal(transpile(saechs, translations, text), typescript);
+  assert.match(transpileToSaechs(typescript, translations, reverseTranslations, text), /wenn klammeruff bereit klammerzu geschweifteauf weiter semikolon geschweiftezu sonst geschweifteauf fertsch semikolon geschweiftezu/);
+});
+
+test('übersetzt try, catch, finally und throw als Paket', async () => {
+  const { translations, reverseTranslations, text } = await loadTranslations(configPath);
+  const saechs = 'versuchma geschweifteauf schmeiss fehler semikolon geschweiftezu fangab klammeruff fehler klammerzu geschweifteauf geschweiftezu amende geschweifteauf geschweiftezu';
+  const typescript = 'try { throw fehler ; } catch ( fehler ) { } finally { }';
+  assert.equal(transpile(saechs, translations, text), typescript);
+  assert.match(transpileToSaechs(typescript, translations, reverseTranslations, text), /versuchma geschweifteauf schmeiss fehler semikolon geschweiftezu fangab klammeruff fehler klammerzu geschweifteauf geschweiftezu amende geschweifteauf geschweiftezu/);
+});
+
+test('übersetzt do-while mit machma und solange', async () => {
+  const { translations, text } = await loadTranslations(configPath);
+  assert.equal(
+    transpile('machma geschweifteauf geschweiftezu solange klammeruff aktiv klammerzu semikolon', translations, text),
+    'do { } while ( aktiv ) ;'
+  );
+});
+
+test('übersetzt Klassen, Vererbung und Sichtbarkeit bidirektional', async () => {
+  const { translations, reverseTranslations, text } = await loadTranslations(configPath);
+  const saechs = 'gibraus sonding Hund erbtvon Tier machtswie Haustier geschweifteauf geschützt bauarbeiter klammeruff name doppelpunkt schrift klammerzu geschweifteauf obersonding klammeruff name klammerzu semikolon geschweiftezu füralle überschreib laut klammeruff klammerzu doppelpunkt schrift geschweifteauf gibbe dasda punkt name semikolon geschweiftezu geschweiftezu';
+  const typescript = 'export class Hund extends Tier implements Haustier { protected constructor ( name : string ) { super ( name ) ; } public override laut ( ) : string { return this . name ; } }';
+  assert.equal(transpile(saechs, translations, text), typescript);
+  const roundtrip = transpileToSaechs(typescript, translations, reverseTranslations, text);
+  assert.match(roundtrip, /sonding Hund erbtvon Tier machtswie Haustier/);
+  assert.match(roundtrip, /geschützt bauarbeiter/);
+  assert.match(roundtrip, /obersonding klammeruff name klammerzu/);
+  assert.match(roundtrip, /füralle überschreib laut/);
+});
+
+test('übersetzt Interfaces und abstrakte, statische sowie schreibgeschützte Elemente', async () => {
+  const { translations, reverseTranslations, text } = await loadTranslations(configPath);
+  const typescript = 'interface Ding { readonly wert: object; } abstract class Basis { static readonly art: keyof Ding; }';
+  const saechs = transpileToSaechs(typescript, translations, reverseTranslations, text);
+  assert.match(saechs, /bauplan Ding/);
+  assert.match(saechs, /nurguggen wert doppelpunkt zeuch/);
+  assert.match(saechs, /nuridee sonding Basis/);
+  assert.match(saechs, /fest nurguggen art doppelpunkt schlüsselvon Ding/);
+  assert.equal(transpile(saechs, translations, text).replace(/\s+/g, ''), typescript.replace(/\s+/g, ''));
+});
+
+test('übersetzt Pfeilfunktionen und this mit pfeil und dasda', async () => {
+  const { translations, reverseTranslations, text } = await loadTranslations(configPath);
+  const saechs = 'dauerdings holWert issgleich klammeruff klammerzu pfeil dasda punkt wert semikolon';
+  const typescript = 'const holWert = ( ) => this . wert ;';
+  assert.equal(transpile(saechs, translations, text), typescript);
+  assert.match(
+    transpileToSaechs(typescript, translations, reverseTranslations, text),
+    /dauerdings holWert issgleich klammeruff klammerzu pfeil dasda punkt wert semikolon/
+  );
+});
+
+test('übersetzt die vollständige Grundtypenfamilie bidirektional', async () => {
+  const { translations, reverseTranslations, text } = await loadTranslations(configPath);
+  const typescript = 'let a: bigint; let b: object; let c: symbol; let d: void; let e: unknown; let f: any; let g: never; const h = null; const i = undefined;';
+  const saechs = transpileToSaechs(typescript, translations, reverseTranslations, text);
+  assert.match(saechs, /riesennummer/);
+  assert.match(saechs, /zeuch/);
+  assert.match(saechs, /merkzeichen/);
+  assert.match(saechs, /ohnewert/);
+  assert.match(saechs, /irgendwas/);
+  assert.match(saechs, /egalwas/);
+  assert.match(saechs, /niemals/);
+  assert.match(saechs, /nix/);
+  assert.match(saechs, /weessnisch/);
+  assert.equal(transpile(saechs, translations, text).replace(/\s+/g, ''), typescript.replace(/\s+/g, ''));
 });
 
 test('lässt Strings und Kommentare unberührt', async () => {
@@ -63,7 +162,7 @@ test('übersetzt TypeScript mit längsten Operatoren zurück', async () => {
   const source = 'const zahl: number = 2 + 3;\nif (zahl === 5) {}';
   const saechs = transpileToSaechs(source, translations, reverseTranslations, text);
   assert.match(saechs, /dauerdings zahl doppelpunkt nummer issgleich 2 machmehr 3 semikolon/);
-  assert.match(saechs, /wennde klammeruff zahl isswirklichgleich 5 klammerzu/);
+  assert.match(saechs, /wenn klammeruff zahl isswirklichgleich 5 klammerzu/);
 });
 
 test('Roundtrip schützt kollidierende Bezeichner und Wörter im Text', async () => {
@@ -100,7 +199,7 @@ test('lässt Template-Strings samt Ausdrücken als sichere Einheit stehen', asyn
 
 test('erzeugt ausführbares JavaScript aus übersetztem TypeScript', async () => {
   const { translations, text } = await loadTranslations(configPath);
-  const saechs = 'machema doppelt klammeruff wert doppelpunkt nummer klammerzu geschweifteAuf gibbe wert machmal 2 semikolon geschweifteZu';
+  const saechs = 'machema doppelt klammeruff wert doppelpunkt nummer klammerzu geschweifteauf gibbe wert machmal 2 semikolon geschweiftezu';
   const typescript = transpile(saechs, translations, text);
   const { code } = emitJavaScript(typescript);
   assert.match(code, /function doppelt\(wert\)/);
