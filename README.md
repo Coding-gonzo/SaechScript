@@ -160,6 +160,7 @@ node bin/saechscript.js nach-ts programm.saechs --config eigene-regeln.json
 | `return` | `gibbe` |
 | `if` / `else` | `wenn` / `sonst` |
 | `switch` / `case` / `default` | `probiermal` / `wenndas` / `vonhausaus` |
+| `enum` | `aufzähldings` |
 | `break` / `continue` | `fertsch` / `weiter` |
 | `try` / `catch` / `finally` | `versuchma` / `fangab` / `amende` |
 | `throw` | `schmeiss` |
@@ -167,6 +168,8 @@ node bin/saechscript.js nach-ts programm.saechs --config eigene-regeln.json
 | `class` / `interface` | `sonding` / `bauplan` |
 | `extends` / `implements` | `erbtvon` / `machtswie` |
 | `constructor` / `new` | `bauarbeiter` / `neu` |
+| `in` / `delete` | `drinne` / `machweg` |
+| `yield` | `gibweiter` |
 | `this` / `super` | `dasda` / `obersonding` |
 | `public` / `private` / `protected` | `füralle` / `fürmich` / `geschützt` |
 | `static` / `readonly` | `fest` / `nurguggen` |

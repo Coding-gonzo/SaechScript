@@ -152,6 +152,18 @@ test('übersetzt zusammengesetzte Zuweisungen bidirektional', async () => {
   assert.doesNotThrow(() => emitJavaScript(roundtrip));
 });
 
+test('übersetzt Aufzählungen, Objektoperationen und Generatoren bidirektional', async () => {
+  const { translations, reverseTranslations, text } = await loadTranslations(configPath);
+  const typescript = 'enum Farbe { Rot, Blau } const ding: { wert?: number } = { wert: 1 }; const vorhanden = "wert" in ding; delete ding.wert; function* zahlen() { yield 1; }';
+  const saechs = transpileToSaechs(typescript, translations, reverseTranslations, text);
+  for (const word of ['aufzähldings', 'drinne', 'machweg', 'gibweiter']) {
+    assert.match(saechs, new RegExp(word));
+  }
+  const roundtrip = transpile(saechs, translations, text);
+  assert.equal(roundtrip.replace(/\s+/g, ''), typescript.replace(/\s+/g, ''));
+  assert.doesNotThrow(() => emitJavaScript(roundtrip));
+});
+
 test('lässt Strings und Kommentare unberührt', async () => {
   const { translations } = await loadTranslations(configPath);
   const source = '// machema machmehr\ndauerdings text issgleich "machema machmehr" semikolon /* klammeruff */';
