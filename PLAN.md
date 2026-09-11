@@ -10,12 +10,13 @@ Satzzeichen werden über `config/uebersetzungen.json` definiert.
 
 1. **MVP (erledigt):** tokenbasierte Übersetzung, externe JSON-Regeln, CLI,
    Kommentare und Strings schützen, Tests und baubares Beispiel.
-2. **Rückübersetzung (aktuell):** TypeScript nach SächScript, kanonisches
+2. **Rückübersetzung (erledigt):** TypeScript nach SächScript, kanonisches
    Vokabular, `wOrt`-Schutz und Roundtrip-Tests.
-3. **Parser:** Template-String-Ausdrücke und reguläre Ausdrücke korrekt erkennen,
-   genaue Diagnose mit Zeile/Spalte sowie optionale kompakte Formatierung.
-4. **TypeScript-Anbindung:** TypeScript-Compiler aufrufen, JavaScript und Source
-   Maps erzeugen, Fehlerpositionen auf `.saechs` zurückführen.
+3. **Parser (teilweise erledigt):** reguläre Ausdrücke korrekt erkennen und
+   Template-Strings sicher erhalten. Ihre Ausdrücke werden noch nicht übersetzt.
+4. **TypeScript-Anbindung (aktuell):** JavaScript erzeugen und Syntaxfehler mit
+   Zeile/Spalte melden. Als Nächstes folgen projektweite Typprüfung und Source
+   Maps, die Fehlerpositionen auf `.saechs` zurückführen.
 5. **Werkzeuge:** VS-Code-Syntaxhervorhebung, Formatter, Sprachserver und
    automatische Dokumentation der verfügbaren Wörter.
 6. **Sprache stabilisieren:** Dialektbeirat, reservierte Wörter, Versionierung der

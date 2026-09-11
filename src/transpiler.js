@@ -1,3 +1,5 @@
+import ts from 'typescript';
+
 const wordAt = /[\p{L}_$][\p{L}\p{N}_$]*/uy;
 
 /**
@@ -70,8 +72,18 @@ export function transpileToSaechs(source, translations, reverseTranslations, tex
     .sort((left, right) => right.length - left.length);
   let result = '';
   let index = 0;
+  const opaqueRanges = collectOpaqueTypeScriptRanges(source);
+  let opaqueIndex = 0;
 
   while (index < source.length) {
+    while (opaqueIndex < opaqueRanges.length && opaqueRanges[opaqueIndex].end <= index) opaqueIndex += 1;
+    const opaque = opaqueRanges[opaqueIndex];
+    if (opaque && opaque.start === index) {
+      result += source.slice(opaque.start, opaque.end);
+      index = opaque.end;
+      continue;
+    }
+
     const character = source[index];
     const next = source[index + 1];
 
@@ -131,6 +143,22 @@ export function transpileToSaechs(source, translations, reverseTranslations, tex
   }
 
   return result;
+}
+
+function collectOpaqueTypeScriptRanges(source) {
+  const sourceFile = ts.createSourceFile('eingabe.ts', source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
+  const ranges = [];
+  const visit = (node) => {
+    if (node.kind === ts.SyntaxKind.RegularExpressionLiteral ||
+        node.kind === ts.SyntaxKind.NoSubstitutionTemplateLiteral ||
+        node.kind === ts.SyntaxKind.TemplateExpression) {
+      ranges.push({ start: node.getStart(sourceFile), end: node.end });
+      return;
+    }
+    ts.forEachChild(node, visit);
+  };
+  visit(sourceFile);
+  return ranges.sort((left, right) => left.start - right.start);
 }
 
 function readProtectedWord(source, start, translations, text) {

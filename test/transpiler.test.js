@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { resolve } from 'node:path';
 import { loadTranslations } from '../src/config.js';
 import { transpile, transpileToSaechs } from '../src/transpiler.js';
+import { emitJavaScript } from '../src/compiler.js';
 
 const configPath = resolve('config/uebersetzungen.json');
 
@@ -71,5 +72,42 @@ test('Roundtrip schützt kollidierende Bezeichner und Wörter im Text', async ()
   assert.equal(
     transpile(saechs, translations, text).replace(/\s+/g, ''),
     typescript.replace(/\s+/g, '')
+  );
+});
+
+test('unterscheidet reguläre Ausdrücke sicher von Division', async () => {
+  const { translations, reverseTranslations, text } = await loadTranslations(configPath);
+  const typescript = 'const muster = /hochkommazu\\s+/gi; const hälfte = 10 / 2;';
+  const saechs = transpileToSaechs(typescript, translations, reverseTranslations, text);
+  assert.match(saechs, /\/hochkommazu\\s\+\/gi/);
+  assert.match(saechs, /10 machmaldurch 2/);
+  assert.equal(
+    transpile(saechs, translations, text).replace(/\s+/g, ''),
+    typescript.replace(/\s+/g, '')
+  );
+});
+
+test('lässt Template-Strings samt Ausdrücken als sichere Einheit stehen', async () => {
+  const { translations, reverseTranslations, text } = await loadTranslations(configPath);
+  const template = 'const text = `Wert: ${zahl + 1}`;';
+  const saechs = transpileToSaechs(template, translations, reverseTranslations, text);
+  assert.match(saechs, /`Wert: \$\{zahl \+ 1\}`/);
+  assert.equal(transpile(saechs, translations, text).replace(/\s+/g, ''), template.replace(/\s+/g, ''));
+});
+
+test('erzeugt ausführbares JavaScript aus übersetztem TypeScript', async () => {
+  const { translations, text } = await loadTranslations(configPath);
+  const saechs = 'machema doppelt klammeruff wert doppelpunkt nummer klammerzu geschweifteAuf gibbe wert machmal 2 semikolon geschweifteZu';
+  const typescript = transpile(saechs, translations, text);
+  const { code } = emitJavaScript(typescript);
+  assert.match(code, /function doppelt\(wert\)/);
+  assert.match(code, /return wert \* 2/);
+  assert.doesNotMatch(code, /: number/);
+});
+
+test('meldet TypeScript-Syntaxfehler mit einer Position', () => {
+  assert.throws(
+    () => emitJavaScript('const kaputt = ;'),
+    /Zeile 1, Spalte \d+/
   );
 });
