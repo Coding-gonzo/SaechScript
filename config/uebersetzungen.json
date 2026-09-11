@@ -30,6 +30,8 @@
       "holrein": "import",
       "gibraus": "export",
       "aus": "from",
+      "brauchma": "require",
+      "behaupte": "assert",
       "namensdings": "namespace",
       "baustein": "module",
       "überall": "global",
@@ -85,7 +87,9 @@
       "ist": "is",
       "versichert": "asserts",
       "angekündigt": "declare",
-      "einzig": "unique"
+      "einzig": "unique",
+      "raus": "out",
+      "eingebaut": "intrinsic"
     },
     "werte": {
       "nuja": "true",

@@ -67,6 +67,8 @@ Abgleich mit TypeScript noch fehlenden Tokens. Die maschinenlesbare Quelle bleib
 | `import` | `holrein` |
 | `export` | `gibraus` |
 | `from` | `aus` |
+| `require` | `brauchma` |
+| `assert` | `behaupte` |
 
 ### Namensräume
 
@@ -131,6 +133,8 @@ Abgleich mit TypeScript noch fehlenden Tokens. Die maschinenlesbare Quelle bleib
 | `asserts` | `versichert` |
 | `declare` | `angekündigt` |
 | `unique` | `einzig` |
+| `out` | `raus` |
+| `intrinsic` | `eingebaut` |
 | `true` | `nuja` |
 | `false` | `nee` |
 | `null` | `nix` |
@@ -183,13 +187,6 @@ Diese Tokens kommen in modernem TypeScript regelmäßig vor.
 | `#` | `privatzeichen` |
 | `` ` `` | noch offen – Teil der Template-String-Syntax |
 
-## Fehlend: mittlere Priorität
-
-| Bereich | TypeScript-Tokens |
-| --- | --- |
-| Import-Kompatibilität | `require`, `assert` |
-| Typinternes | `out`, `intrinsic` |
-
 ## Fehlend: Bitoperatoren
 
 Die Operatoren `&`, `|`, `^`, `~`, `<<`, `>>`, `>>>` sowie ihre
@@ -207,6 +204,6 @@ Sie sollten als eine gemeinsame Wortfamilie festgelegt werden.
 
 ## Zählung
 
-- 122 normale Übersetzungsregeln
+- 126 normale Übersetzungsregeln
 - 3 Textsteuerwörter (`hochkommauff`, `hochkommazu`, `wOrt`)
-- 23 noch nicht zugeordnete TypeScript-Tokens
+- 19 noch nicht zugeordnete TypeScript-Tokens

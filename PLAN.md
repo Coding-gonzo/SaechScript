@@ -9,19 +9,30 @@ SächScript zurückübersetzt. Schlüsselwörter, Operatoren und Satzzeichen wer
 
 ## Aktueller Stand
 
-- 122 normale Regeln und 3 Textsteuerwörter
-- 23 beim TypeScript-6.0.3-Abgleich noch offene Tokens
+- 126 normale Regeln und 3 Textsteuerwörter
+- 19 beim TypeScript-6.0.3-Abgleich noch offene Tokens
 - Einzeldatei- und Projektmodus, Typprüfung und JavaScript-Ausgabe
 - bidirektionale Übersetzung mit `wOrt`-Kollisionsschutz
 - Diagnosepositionen und Source Maps zurück auf `.saechs`
 
 Die genaue Zuordnung steht in [`VOKABULAR.md`](./VOKABULAR.md).
 
+## Arbeitsstand zum Tagesabschluss (12. September 2026)
+
+Der Kompatibilitäts- und Typblock mit `require`, `assert`, `out` und `intrinsic`
+ist implementiert, dokumentiert und getestet. Die Testsuite umfasst 33 Tests;
+Projektprüfung und Beispiel-Build sind erfolgreich.
+
+Beim nächsten Termin beginnt die Arbeit mit der gemeinsamen Benennung der 13
+Bitoperatoren. Erst wenn die Wortfamilie feststeht, werden Konfiguration,
+Roundtrip-Tests und Dokumentation zusammen angepasst. Danach folgen private
+Felder und Template-Ausdrücke als erste kontextabhängige Lexer-Erweiterungen.
+
 ## Nächste Schritte
 
-### 1. Kompatibilitäts- und Typwörter
+### 1. Kompatibilitäts- und Typwörter (erledigt)
 
-Als nächster kleiner, rein konfigurierbarer Block folgen:
+Der rein konfigurierbare Block ist umgesetzt:
 
 | TypeScript | Arbeitsvorschlag |
 | --- | --- |
@@ -33,7 +44,7 @@ Als nächster kleiner, rein konfigurierbarer Block folgen:
 Abnahme: Hin- und Rückübersetzung, Kollisionsschutz und mindestens ein
 syntaktisch gültiges Beispiel pro Kontext.
 
-### 2. Bitoperatoren als geschlossene Wortfamilie
+### 2. Bitoperatoren als geschlossene Wortfamilie (als Nächstes)
 
 Offen sind `&`, `|`, `^`, `~`, `<<`, `>>`, `>>>` sowie `&=`, `|=`, `^=`,
 `<<=`, `>>=` und `>>>=`. Vor der Implementierung werden gemeinsam eindeutige

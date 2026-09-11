@@ -38,15 +38,14 @@ const ergebnis = addiere(2, 3);
 
 ## Projektstand
 
-Der aktuelle Meilenstein umfasst **122 normale Übersetzungsregeln** und drei
+Der aktuelle Meilenstein umfasst **126 normale Übersetzungsregeln** und drei
 Textsteuerwörter. Die Regeln funktionieren in beide Richtungen und werden mit
 Roundtrip-, Compiler-, Projekt- und Source-Map-Tests abgesichert. Von den beim
-Abgleich mit TypeScript 6.0.3 erfassten Tokens sind noch **23** offen.
+Abgleich mit TypeScript 6.0.3 erfassten Tokens sind noch **19** offen.
 
 - [`VOKABULAR.md`](./VOKABULAR.md) enthält die vollständige, gruppierte Wortliste.
 - [`PLAN.md`](./PLAN.md) beschreibt die offenen Blöcke und ihre Reihenfolge.
-- Der nächste Vokabularblock behandelt `require`, `assert`, `out` und
-  `intrinsic`; danach folgt die Familie der Bitoperatoren.
+- Der nächste Vokabularblock ist die Familie der Bitoperatoren.
 
 ## Installation
 
@@ -180,6 +179,7 @@ node bin/saechscript.js nach-ts programm.saechs --config eigene-regeln.json
 | `using` / `defer` | `benutzma` / `später` |
 | `namespace` / `module` | `namensdings` / `baustein` |
 | `global` | `überall` |
+| `require` / `assert` | `brauchma` / `behaupte` |
 | `class` / `interface` | `sonding` / `bauplan` |
 | `extends` / `implements` | `erbtvon` / `machtswie` |
 | `constructor` / `new` | `bauarbeiter` / `neu` |
@@ -202,6 +202,7 @@ node bin/saechscript.js nach-ts programm.saechs --config eigene-regeln.json
 | `infer` / `is` | `abgeleitet` / `ist` |
 | `asserts` / `declare` | `versichert` / `angekündigt` |
 | `unique` | `einzig` |
+| `out` / `intrinsic` | `raus` / `eingebaut` |
 | `+` / `-` | `machmehr` / `machweniger` |
 | `*` / `/` | `machmal` / `machmaldurch` |
 | `=>` | `pfeil` |

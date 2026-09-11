@@ -201,6 +201,26 @@ test('übersetzt Ressourcen und Accessors bidirektional', async () => {
   assert.doesNotThrow(() => emitJavaScript(transpile(saechsSources[1], translations, text)));
 });
 
+test('übersetzt Kompatibilitäts- und Typwörter bidirektional', async () => {
+  const { translations, reverseTranslations, text } = await loadTranslations(configPath);
+  const sources = [
+    'import Werkzeug = require("werkzeug");',
+    'import daten from "./daten.json" assert { type: "json" };',
+    'interface Quelle<out T> { hole(): T; }',
+    'type Eingebaut<S extends string> = intrinsic;'
+  ];
+  const saechsSources = sources.map((source) => transpileToSaechs(source, translations, reverseTranslations, text));
+  const combined = saechsSources.join(' ');
+  for (const word of ['brauchma', 'behaupte', 'raus', 'eingebaut']) {
+    assert.match(combined, new RegExp(word));
+  }
+  for (const [index, saechs] of saechsSources.entries()) {
+    const roundtrip = transpile(saechs, translations, text);
+    assert.equal(roundtrip.replace(/\s+/g, ''), sources[index].replace(/\s+/g, ''));
+  }
+  assert.doesNotThrow(() => emitJavaScript(transpile(saechsSources[2], translations, text)));
+});
+
 test('lässt Strings und Kommentare unberührt', async () => {
   const { translations } = await loadTranslations(configPath);
   const source = '// machema machmehr\ndauerdings text issgleich "machema machmehr" semikolon /* klammeruff */';
