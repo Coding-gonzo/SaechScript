@@ -76,6 +76,14 @@ Abgleich mit TypeScript noch fehlenden Tokens. Die maschinenlesbare Quelle bleib
 | `module` | `baustein` |
 | `global` | `überall` |
 
+### Ressourcen und Zugriffe
+
+| TypeScript | SächScript |
+| --- | --- |
+| `using` | `benutzma` |
+| `defer` | `später` |
+| `accessor` | `zugriff` |
+
 ### Klassen und Objekte
 
 | TypeScript | SächScript |
@@ -179,8 +187,6 @@ Diese Tokens kommen in modernem TypeScript regelmäßig vor.
 
 | Bereich | TypeScript-Tokens |
 | --- | --- |
-| Ressourcen | `using`, `defer` |
-| Accessors | `accessor` |
 | Import-Kompatibilität | `require`, `assert` |
 | Typinternes | `out`, `intrinsic` |
 
@@ -201,6 +207,6 @@ Sie sollten als eine gemeinsame Wortfamilie festgelegt werden.
 
 ## Zählung
 
-- 119 normale Übersetzungsregeln
+- 122 normale Übersetzungsregeln
 - 3 Textsteuerwörter (`hochkommauff`, `hochkommazu`, `wOrt`)
-- 26 noch nicht zugeordnete TypeScript-Tokens
+- 23 noch nicht zugeordnete TypeScript-Tokens

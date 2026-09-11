@@ -165,6 +165,7 @@ node bin/saechscript.js nach-ts programm.saechs --config eigene-regeln.json
 | `try` / `catch` / `finally` | `versuchma` / `fangab` / `amende` |
 | `throw` | `schmeiss` |
 | `do` / `while` | `machma` / `solange` |
+| `using` / `defer` | `benutzma` / `später` |
 | `namespace` / `module` | `namensdings` / `baustein` |
 | `global` | `überall` |
 | `class` / `interface` | `sonding` / `bauplan` |
@@ -177,6 +178,7 @@ node bin/saechscript.js nach-ts programm.saechs --config eigene-regeln.json
 | `static` / `readonly` | `fest` / `nurguggen` |
 | `abstract` / `override` | `nuridee` / `überschreib` |
 | `get` / `set` | `holma` / `setzma` |
+| `accessor` | `zugriff` |
 | `instanceof` / `keyof` | `isseinsvon` / `schlüsselvon` |
 | `bigint` / `object` | `riesennummer` / `zeuch` |
 | `symbol` | `merkzeichen` |

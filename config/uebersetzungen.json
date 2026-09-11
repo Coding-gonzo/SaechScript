@@ -39,6 +39,8 @@
       "schmeiss": "throw",
       "wardema": "await",
       "nebenbei": "async",
+      "benutzma": "using",
+      "später": "defer",
       "neu": "new",
       "drinne": "in",
       "machweg": "delete",
@@ -57,6 +59,7 @@
       "nuridee": "abstract",
       "holma": "get",
       "setzma": "set",
+      "zugriff": "accessor",
       "überschreib": "override",
       "isseinsvon": "instanceof",
       "schlüsselvon": "keyof"
