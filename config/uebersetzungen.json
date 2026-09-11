@@ -2,10 +2,16 @@
   "$schema": "../schemas/uebersetzungen.schema.json",
   "sprache": "SächScript",
   "version": 1,
+  "text": {
+    "anfang": "hochkommauff",
+    "ende": "hochkommazu",
+    "wortschutz": "wOrt"
+  },
   "regeln": {
     "schluesselwoerter": {
       "machema": "function",
-      "lassma": "const",
+      "dings": "var",
+      "dauerdings": "const",
       "aenderma": "let",
       "wennde": "if",
       "sonst": "else",
@@ -27,7 +33,7 @@
     "typen": {
       "jane": "boolean",
       "schrift": "string",
-      "zahl": "number",
+      "nummer": "number",
       "nueschtTyp": "void",
       "irgendwas": "unknown"
     },
@@ -38,14 +44,16 @@
       "weessnisch": "undefined"
     },
     "operatoren": {
-      "plus": "+",
-      "minus": "-",
-      "mal": "*",
-      "durch": "/",
+      "machmehr": "+",
+      "machweniger": "-",
+      "machmal": "*",
+      "machmaldurch": "/",
       "rest": "%",
-      "ist": "=",
-      "gleich": "===",
-      "ungleich": "!==",
+      "issgleich": "=",
+      "isswirklichgleich": "===",
+      "issungefährgleich": "==",
+      "issnichgleich": "!=",
+      "isswirklichnichgleich": "!==",
       "kleener": "<",
       "groesser": ">",
       "kleenerGleich": "<=",
@@ -56,8 +64,9 @@
       "pfeil": "=>"
     },
     "zeichen": {
-      "rundeAuf": "(",
-      "rundeZu": ")",
+      "ät": "@",
+      "klammeruff": "(",
+      "klammerzu": ")",
       "eckigeAuf": "[",
       "eckigeZu": "]",
       "geschweifteAuf": "{",

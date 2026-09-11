@@ -4,8 +4,8 @@ TypeScript goes sächsisch: ein kleiner, erweiterbarer Transpiler von
 sächsischem Quelltext nach TypeScript.
 
 ```saechs
-machema addiere rundeAuf a doppelpunkt zahl komma b doppelpunkt zahl rundeZu geschweifteAuf
-  gibbe a plus b semikolon
+machema addiere klammeruff a doppelpunkt nummer komma b doppelpunkt nummer klammerzu geschweifteAuf
+  gibbe a machmehr b semikolon
 geschweifteZu
 ```
 
@@ -40,13 +40,28 @@ Alle Regeln stehen in `config/uebersetzungen.json`. Beispielsweise kann unter
 `operatoren` Folgendes ergänzt werden:
 
 ```json
-"hoch": "**",
+"machhoch": "**",
 "doppelFrage": "??"
 ```
 
 Der Lexer ersetzt nur vollständige Quellwörter. Strings und Kommentare werden
 nicht verändert. Die umgebenden Leerzeichen bleiben erhalten; TypeScript erlaubt
 Leerraum rund um die meisten Satzzeichen.
+
+Texte können ebenfalls ohne Anführungszeichen geschrieben werden:
+
+```saechs
+dauerdings text issgleich hochkommauff Nu, das läuft. hochkommazu semikolon
+```
+
+Steht ein Wort aus dem SächScript-Vokabular wörtlich im Text, wird `wOrt`
+davorgeschrieben:
+
+```saechs
+hochkommauff Das Wort wOrt hochkommazu bleibt Teil des Textes. hochkommazu
+```
+
+Das ergibt den TypeScript-Text `"Das Wort hochkommazu bleibt Teil des Textes."`.
 
 ## Aktuelle Grenze
 

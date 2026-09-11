@@ -4,11 +4,11 @@ import { loadTranslations } from './config.js';
 import { transpile } from './transpiler.js';
 
 export async function compileFile(inputPath, outputPath, configPath) {
-  const [{ translations }, source] = await Promise.all([
+  const [{ translations, text }, source] = await Promise.all([
     loadTranslations(configPath),
     readFile(inputPath, 'utf8')
   ]);
-  const output = transpile(source, translations);
+  const output = transpile(source, translations, text);
   if (outputPath) {
     await mkdir(dirname(outputPath), { recursive: true });
     await writeFile(outputPath, output, 'utf8');

@@ -2,11 +2,21 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "SächScript-Übersetzungen",
   "type": "object",
-  "required": ["sprache", "version", "regeln"],
+  "required": ["sprache", "version", "text", "regeln"],
   "properties": {
     "$schema": { "type": "string" },
     "sprache": { "type": "string" },
     "version": { "type": "integer", "minimum": 1 },
+    "text": {
+      "type": "object",
+      "required": ["anfang", "ende", "wortschutz"],
+      "properties": {
+        "anfang": { "type": "string", "minLength": 1 },
+        "ende": { "type": "string", "minLength": 1 },
+        "wortschutz": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
     "regeln": {
       "type": "object",
       "additionalProperties": {

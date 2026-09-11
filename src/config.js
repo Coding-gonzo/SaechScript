@@ -14,6 +14,11 @@ export async function loadTranslations(path) {
     throw new Error('Übersetzungsdatei braucht ein Objekt "regeln".');
   }
 
+  const text = document.text;
+  if (!text || !identifier.test(text.anfang) || !identifier.test(text.ende) || !identifier.test(text.wortschutz)) {
+    throw new Error('Die Textsyntax braucht gültige Wörter für "anfang", "ende" und "wortschutz".');
+  }
+
   const translations = new Map();
   for (const [category, rules] of Object.entries(document.regeln)) {
     if (!rules || typeof rules !== 'object' || Array.isArray(rules)) {
@@ -32,5 +37,11 @@ export async function loadTranslations(path) {
       translations.set(source, target);
     }
   }
-  return { document, translations };
+  for (const specialWord of [text.anfang, text.ende, text.wortschutz]) {
+    if (translations.has(specialWord)) {
+      throw new Error(`Das Textwort "${specialWord}" darf keine normale Übersetzungsregel sein.`);
+    }
+  }
+
+  return { document, translations, text };
 }
