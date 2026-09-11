@@ -36,6 +36,18 @@ const ergebnis = addiere(2, 3);
 - standardkonforme Source Maps zurück auf `.saechs` erzeugen
 - Vokabular über eine JSON-Datei erweitern
 
+## Projektstand
+
+Der aktuelle Meilenstein umfasst **122 normale Übersetzungsregeln** und drei
+Textsteuerwörter. Die Regeln funktionieren in beide Richtungen und werden mit
+Roundtrip-, Compiler-, Projekt- und Source-Map-Tests abgesichert. Von den beim
+Abgleich mit TypeScript 6.0.3 erfassten Tokens sind noch **23** offen.
+
+- [`VOKABULAR.md`](./VOKABULAR.md) enthält die vollständige, gruppierte Wortliste.
+- [`PLAN.md`](./PLAN.md) beschreibt die offenen Blöcke und ihre Reihenfolge.
+- Der nächste Vokabularblock behandelt `require`, `assert`, `out` und
+  `intrinsic`; danach folgt die Familie der Bitoperatoren.
+
 ## Installation
 
 Benötigt werden Node.js 20 oder neuer und npm.
@@ -285,6 +297,11 @@ Mehrdateiprojekte, Importauflösung und komponierte Source Maps ab.
 
 - Template-Strings bleiben als sichere TypeScript-Einheit erhalten; Ausdrücke in
   `${...}` werden noch nicht versächsischt.
+- Private Felder mit `#` und JSX/TSX brauchen kontextabhängige Lexerregeln und
+  lassen sich deshalb nicht als einfache globale Wortersetzung ergänzen.
+- `using` und `defer` werden bidirektional übersetzt. Ein vollständiger Build mit
+  `using` benötigt zusätzlich die passende TypeScript-Library für `Disposable`;
+  ein `defer`-Import muss auf ein tatsächlich vorhandenes Modul zeigen.
 - TypeScript-Abhängigkeiten aus `node_modules` und komplexe `paths`-Aliase sind
   noch nicht als eigenes SächScript-Konfigurationsmodell abgebildet.
 - Source Maps enthalten den ursprünglichen SächScript-Quelltext und verweisen
