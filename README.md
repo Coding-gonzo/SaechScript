@@ -1,87 +1,182 @@
 # SächScript
 
-TypeScript goes sächsisch: ein kleiner, erweiterbarer Transpiler von
-sächsischem Quelltext nach TypeScript.
+**TypeScript goes sächsisch.** SächScript übersetzt ausgeschriebene sächsische
+Quelltexte nach TypeScript und JavaScript – und vorhandenes TypeScript wieder
+zurück nach SächScript.
 
 ```saechs
-machema addiere klammeruff a doppelpunkt nummer komma b doppelpunkt nummer klammerzu geschweifteAuf
+machema addiere klammeruff a doppelpunkt nummer komma b doppelpunkt nummer klammerzu doppelpunkt nummer geschweifteAuf
   gibbe a machmehr b semikolon
 geschweifteZu
+
+dauerdings ergebnis issgleich addiere klammeruff 2 komma 3 klammerzu semikolon
 ```
 
-wird zu:
+Daraus entsteht:
 
 ```ts
-function addiere ( a : number , b : number ) {
-  return a + b ;
+function addiere(a: number, b: number): number {
+  return a + b;
 }
+
+const ergebnis = addiere(2, 3);
 ```
 
-## Benutzung
+## Funktionen
 
-Node.js 20 oder neuer genügt; es gibt keine externen Abhängigkeiten.
+- SächScript nach TypeScript übersetzen
+- TypeScript kanonisch nach SächScript zurückübersetzen
+- SächScript direkt als modernes JavaScript bauen
+- syntaktische und semantische TypeScript-Prüfung
+- Fehlerpositionen auf den ursprünglichen SächScript-Quelltext zurückführen
+- Strings und kollidierende Bezeichner mit `wOrt` eindeutig schützen
+- reguläre Ausdrücke sicher vom Divisionsoperator unterscheiden
+- Vokabular über eine JSON-Datei erweitern
+
+## Installation
+
+Benötigt werden Node.js 20 oder neuer und npm.
 
 ```powershell
-npm test
-npm run build
-node bin/saechscript.js examples/hallo.saechs --stdout
-node bin/saechscript.js mein-programm.saechs -o dist/mein-programm.ts
-node bin/saechscript.js nach-saechs mein-programm.ts -o dist/mein-programm.saechs
-node bin/saechscript.js bau examples/hallo.saechs -o dist/hallo.js
-node bin/saechscript.js pruefe examples/hallo.saechs
+git clone https://github.com/Coding-gonzo/SaechScript.git
+cd SaechScript
+npm install
 ```
 
-Optional kann eine andere Regeldatei verwendet werden:
+Optional kann die lokale CLI verlinkt werden:
 
 ```powershell
-node bin/saechscript.js programm.saechs --config eigene-regeln.json
+npm link
+saechscript --help
 ```
 
-## Neue Wörter und Zeichen ergänzen
+Ohne Verlinkung werden die folgenden Beispiele mit
+`node bin/saechscript.js` ausgeführt.
 
-Alle Regeln stehen in `config/uebersetzungen.json`. Beispielsweise kann unter
-`operatoren` Folgendes ergänzt werden:
+## CLI
+
+### SächScript nach TypeScript
+
+```powershell
+node bin/saechscript.js nach-ts programm.saechs -o dist/programm.ts
+```
+
+`nach-ts` ist der Standardbefehl und kann weggelassen werden:
+
+```powershell
+node bin/saechscript.js programm.saechs --stdout
+```
+
+### TypeScript nach SächScript
+
+```powershell
+node bin/saechscript.js nach-saechs programm.ts -o dist/programm.saechs
+```
+
+Die Rückübersetzung verwendet immer die kanonischen Wörter aus der
+Übersetzungsdatei.
+
+### JavaScript bauen
+
+```powershell
+node bin/saechscript.js bau programm.saechs -o dist/programm.js
+```
+
+### Quelltext prüfen
+
+```powershell
+node bin/saechscript.js pruefe programm.saechs
+```
+
+`pruefe` erzeugt keine Ausgabedatei. Es meldet Syntax- und Typfehler mit Zeile
+und Spalte im ursprünglichen SächScript-Quelltext.
+
+Eine eigene Regeldatei lässt sich mitgeben:
+
+```powershell
+node bin/saechscript.js nach-ts programm.saechs --config eigene-regeln.json
+```
+
+## Auszug aus dem Vokabular
+
+| TypeScript | SächScript |
+| --- | --- |
+| `function` | `machema` |
+| `var` | `dings` |
+| `const` | `dauerdings` |
+| `let` | `aenderma` |
+| `number` | `nummer` |
+| `boolean` | `jane` |
+| `true` / `false` | `nuja` / `nee` |
+| `return` | `gibbe` |
+| `if` / `else` | `wennde` / `sonst` |
+| `+` / `-` | `machmehr` / `machweniger` |
+| `*` / `/` | `machmal` / `machmaldurch` |
+| `=` | `issgleich` |
+| `===` / `==` | `isswirklichgleich` / `issungefährgleich` |
+| `!==` / `!=` | `isswirklichnichgleich` / `issnichgleich` |
+| `(` / `)` | `klammeruff` / `klammerzu` |
+| `@` | `ät` |
+| `"..."` | `hochkommauff ... hochkommazu` |
+
+Das vollständige Vokabular steht in
+[`config/uebersetzungen.json`](./config/uebersetzungen.json).
+
+## Texte und `wOrt`
+
+Texte lassen sich vollständig ausgeschrieben notieren:
+
+```saechs
+dauerdings text issgleich hochkommauff Nu, das läuft. hochkommazu semikolon
+```
+
+Steht ein Wort aus dem SächScript-Vokabular wörtlich innerhalb eines Textes,
+wird ihm `wOrt` vorangestellt:
+
+```saechs
+hochkommauff Das Wort wOrt hochkommazu wOrt und wOrt machmehr bleiben Text. hochkommazu
+```
+
+Das entspricht:
+
+```ts
+"Das Wort hochkommazu und machmehr bleiben Text."
+```
+
+`wOrt` schützt auch Bezeichner, die mit dem Vokabular kollidieren. Eine
+TypeScript-Variable namens `nummer` wird deshalb als `wOrt nummer` ausgegeben und
+nicht mit dem Typ `number` verwechselt.
+
+## Vokabular erweitern
+
+Neue Übersetzungen werden in `config/uebersetzungen.json` ergänzt, beispielsweise:
 
 ```json
 "machhoch": "**",
 "doppelFrage": "??"
 ```
 
-Der Lexer ersetzt nur vollständige Quellwörter. Strings und Kommentare werden
-nicht verändert. Die umgebenden Leerzeichen bleiben erhalten; TypeScript erlaubt
-Leerraum rund um die meisten Satzzeichen.
+Jedes TypeScript-Token darf nur eine kanonische SächScript-Rückübersetzung haben.
+Die Konfiguration wird beim Laden entsprechend validiert.
 
-Texte können ebenfalls ohne Anführungszeichen geschrieben werden:
+## Entwicklung
 
-```saechs
-dauerdings text issgleich hochkommauff Nu, das läuft. hochkommazu semikolon
+```powershell
+npm test
+npm run build
+npm run example
 ```
 
-Steht ein Wort aus dem SächScript-Vokabular wörtlich im Text, wird `wOrt`
-davorgeschrieben:
+Der aktuelle Testumfang deckt Vorwärtsübersetzung, Rückübersetzung, Roundtrips,
+Textschutz, Regex-Literale, Template-Strings, JavaScript-Ausgabe sowie Syntax- und
+Typdiagnosen ab.
 
-```saechs
-hochkommauff Das Wort wOrt hochkommazu bleibt Teil des Textes. hochkommazu
-```
+## Aktuelle Grenzen
 
-Das ergibt den TypeScript-Text `"Das Wort hochkommazu bleibt Teil des Textes."`.
+- Template-Strings bleiben als sichere TypeScript-Einheit erhalten; Ausdrücke in
+  `${...}` werden noch nicht versächsischt.
+- `bau` und `pruefe` verarbeiten derzeit jeweils eine einzelne Quelldatei.
+- Projektweite Imports und echte Source-Map-Dateien folgen in einer späteren
+  Version.
 
-`wOrt` schützt außerdem Bezeichner, die zufällig wie ein Vokabularwort heißen.
-So wird eine TypeScript-Variable namens `nummer` als `wOrt nummer` ausgegeben und
-beim Roundtrip nicht mit dem Typ `number` verwechselt.
-
-## Aktuelle Grenze
-
-Template-Strings werden in Version 0.1 vollständig als String behandelt. Deshalb
-werden sächsische Wörter innerhalb von `${...}` noch nicht übersetzt. Eine
-vollständige TypeScript-Syntaxprüfung und Source Maps sind als nächste Etappe in
-[`PLAN.md`](./PLAN.md) vorgesehen.
-
-Reguläre Ausdrücke werden mithilfe des TypeScript-Parsers sicher vom
-Divisionsoperator unterschieden. Template-Strings bleiben derzeit als vollständige
-TypeScript-Einheit erhalten; ihre `${...}`-Ausdrücke werden noch nicht versächsischt.
-
-`saechscript bau` erzeugt direkt modernes JavaScript. `saechscript pruefe` führt
-dieselbe syntaktische und semantische TypeScript-Prüfung ohne Ausgabedatei aus.
-Fehler werden auf Zeile und Spalte im ursprünglichen SächScript zurückgeführt.
-Projektweite Prüfung mehrerer Dateien und Source-Map-Dateien folgen noch.
+Die geplanten Etappen stehen in [`PLAN.md`](./PLAN.md).
